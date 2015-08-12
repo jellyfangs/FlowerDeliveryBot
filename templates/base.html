@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load staticfiles %}
+
+<html lang="en" class="no-js">
+    <head>
+        <title>{% block title %}Saleor{% endblock %}</title>
+        {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+        <meta name="author" content="{% trans "Mirumee Software" %}">
+        {% endblock meta %}
+
+        <script src="{% static "js/storefront_head.js" %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static "css/storefront.css" %}">
+
+        {% block stylesheet %}{% endblock stylesheet %}
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+
+    <body itemscope itemtype="http://schema.org/WebPage">
+        {% block header %}
+            <header class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+                <nav class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Saleor</a>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse">
+                        <ul class="nav navbar-nav">
+                            {% for category in categories %}
+                                <li>
+                                    <a href="{{ category.get_absolute_url }}">
+                                        {{ category }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Shopping cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
+                                    {% if request.cart %}
+                                    <li class="divider"></li>
+                                    {% for item in request.cart %}
+                                    <li>
+                                        <a href="{% url 'product:details' slug=item.data.product_slug product_id=item.data.product_id %}">
+                                            {{ item.product }}{% if item.quantity != 1 %} <em>×{{ item.quantity }}</em>{% endif %}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    <li class="divider"></li>
+                                    <li><a href="{% url "checkout:index" %}">{% trans "Proceed to checkout" %}</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="."><i class="glyphicon glyphicon-user"></i> {{ user }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url "profile:details" %}">{% trans "Your profile" %}</a></li>
+                                    <li><a href="{% url "profile:orders" %}">{% trans "Your orders" %}</a></li>
+                                    {% if user.is_staff %}
+                                        <li class="divider"></li>
+                                        <li><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li>
+                                    {% endif %}
+                                    <li class="divider"></li>
+                                    <li><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
+                                  </ul>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a href="{% url "registration:login" %}">Log in</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+        {% endblock %}
+        {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="container">
+            {% block outerbreadcrumb %}
+            <ul class="breadcrumb" itemprop="breadcrumb">
+                {% block breadcrumb %}
+                <li>
+                    <a href="/">{% trans "Home" %}</a>
+                </li>
+                {% endblock breadcrumb %}
+            </ul>
+            {% endblock outerbreadcrumb %}
+            {% block outercontent %}
+            <div class="row">
+                <div class="col-sm-12">
+                    {% block content %}
+                        <div class="row">
+                            {% include "category/_items.html" %}
+                        </div>
+                    {% endblock content %}
+                </div>
+            </div>
+            {% endblock outercontent %}
+        </div>
+        {% block footer %}
+            <footer>
+                <div class="container">
+                    <p class="pull-right">
+                        &copy; Mirumee Software 2015
+                    </p>
+                </div>
+            </footer>
+        {% endblock %}
+        {% block footer_scripts %}
+            <script src="{% static "js/storefront.js" %}"></script>
+        {% endblock footer_scripts %}
+    </body>
+</html>

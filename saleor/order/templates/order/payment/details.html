@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load as_horizontal_form from bootstrap %}
+{% load i18n %}
+
+{% block title %}{% trans "Payment" %} — {{ block.super }}{% endblock %}
+
+{% block outerbreadcrumb %}{% endblock %}
+
+{% block content %}
+<h2>Payment</h2>
+{% block forms %}{% endblock %}
+
+{% endblock content %}

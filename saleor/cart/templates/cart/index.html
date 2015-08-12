@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load as_vertical_form from bootstrap %}
+{% load gross from prices_i18n %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Your cart" %} — {{ block.super }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+<li><a href="{% url 'cart:index' %}">{% trans "Cart" %}</a></li>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% if cart %}
+    {{ formset.management_form }}
+    <table class="table table-striped cart" id="cart-items">
+        <thead>
+        <tr>
+            <th class="col-xs-5 col-sm-2 col-md-1">{% trans "Product" %}</th>
+            <th class="col-sm-5 hidden-xs"></th>
+            <th class="col-xs-6 col-sm-3 col-md-2">{% trans "Quantity" %}</th>
+            <th class="col-sm-1 hidden-xs text-right">{% trans "Price" %}</th>
+            <th class="col-xs-1 text-right">{% trans "Subtotal" %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td class="hidden-xs" colspan="2"></td>
+            <td class="col-xs-9 col-md-9 text-right lead" colspan="2">{% trans "Total" %}:
+            <td class="col-xs-3 col-md-2 text-right lead"><b class="cart-total">{% gross cart.get_total %}</b></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for group in cart %}
+            {% for line in group %}
+                <tr class="cart-item">
+                    <td class="hidden-xs">
+                        <a href="{{ line.product.get_absolute_url }}">
+                            {% if line.product.product.images.first %}
+                                <img class="cart-item-image" itemprop="image" src="{{ line.product.product.images.first.image.crop.100x100 }}" alt="">
+                            {% else %}
+                                <img class="cart-item-image" src="{% static 'images/product-image-placeholder.png' %}" alt="">
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ line.product.get_absolute_url }}">
+                            {{ line.product.product }} - {{ line.product.display_variant }}
+                        </a>
+                    </td>
+                    <td>
+                        <div class="cart-item-amount">
+                            <form role="form" action="{% url "cart:update_line" product_id=line.product.pk %}" method="post" class="form-cart">
+                                <div class="input-group cart-item-quantity js-hidden{% if line.form.quantity.errors %} has-error{% endif %}">
+                                    {{ line.form.quantity }}
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info" type="submit">{% trans "Update" %}</button>
+                                    </span>
+                                </div>
+                                {% if line.form.quantity.errors %}
+                                    {% for error in line.form.quantity.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                                {% csrf_token %}
+                            </form>
+
+                            <button type="submit" class="btn btn-link btn-sm cart-item-remove">
+                                <span class="text-muted">{% trans "Remove from cart" %}</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="text-right hidden-xs">{% gross line.get_price_per_item %}</td>
+                    <td class="text-right cart-item-subtotal" data-product-id="{{ line.product.pk }}">
+                        {% gross line.get_total %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-group">
+        <div>
+            <a href="{% url "checkout:index" %}" class="btn btn-primary btn-lg pull-right">{% trans "Proceed to checkout" %}</a>
+        </div>
+    </div>
+{% else %}
+<p>
+    {% trans 'Your cart is empty' %}
+</p>
+{% endif %}
+{% endblock content %}
