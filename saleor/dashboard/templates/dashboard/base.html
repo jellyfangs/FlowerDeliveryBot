@@ -54,12 +54,15 @@
                         <img src="{% static "img/dashboard-logo.svg" %}" alt="">
                     </a>
                 </li>
-                <li class="nav-home"><a href="{% url 'dashboard:index' %}">Home</a></li>
+                <li class="nav-home"><a href="{% url 'dashboard:index' %}">Dashboard</a></li>
                 <li>
-                    <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                    <!-- <ul class="collapsible collapsible-accordion" data-collapsible="accordion"> -->
+                    <ul>
                         <li>
-                            <a class="waves-effect waves-teal collapsible-header{% block menu_catalogue_class %}{% endblock %}">{% trans "Catalogue" %}</a>
-                            <div class="collapsible-body">
+                            <!-- <a class="waves-effect waves-teal collapsible-header{% block menu_catalogue_class %}{% endblock %}">{% trans "Catalog" %}</a> -->
+                            <a>{% trans "Catalog" %}</a>
+                            <!-- <div class="collapsible-body"> -->
+                            <div>
                                 <ul>
                                     <li class="subnav-products"><a href="{% url 'dashboard:product-list' %}">{% trans "Products" %}</a></li>
                                     <li class="subnav-attributes"><a href="{% url 'dashboard:product-attributes' %}">{% trans "Attributes" %}</a></li>
@@ -71,12 +74,24 @@
                         <li class="divider"></li>
 
                         <li>
-                            <a class="waves-effect waves-teal collapsible-header{% block menu_sales_class %}{% endblock %}">{% trans "Sales" %}</a>
-                            <div class="collapsible-body">
+                            <!-- <a class="waves-effect waves-teal collapsible-header{% block menu_sales_class %}{% endblock %}">{% trans "Sales" %}</a> -->
+                            <a>{% trans "Sales" %}</a>
+                            <!-- <div class="collapsible-body"> -->
+                            <div>
                                 <ul>
                                     <li class="subnav-orders"><a href="{% url 'dashboard:orders' %}">{% trans "Orders" %}</a></li>
-                                    <li class="subnav-customers"><a href="{% url 'dashboard:customers' %}">{% trans "Customers" %}</a></li>
                                     <li class="subnav-payments"><a href="{% url 'dashboard:payments' %}">{% trans "Payments" %}</a></li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a>{% trans "Accounts" %}</a>
+                            <div>
+                                <ul>
+                                    <li class="subnav-customers"><a href="{% url 'dashboard:customers' %}">{% trans "Customers" %}</a></li>
                                 </ul>
                             </div>
                         </li>
