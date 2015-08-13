@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-    <title>{% block title %}{% trans "Dashboard - Saleor" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Dashboard" %}{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="{% static "css/dashboard.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "versatileimagefield/css/versatileimagefield.css" %}">
@@ -51,7 +51,7 @@
                 </li>
                 <li class="brand-logo">
                     <a href="{% url 'dashboard:index' %}">
-                        <img src="{% static "img/dashboard-logo.svg" %}" alt="Saleor">
+                        <img src="{% static "img/dashboard-logo.svg" %}" alt="">
                     </a>
                 </li>
                 <li class="nav-home"><a href="{% url 'dashboard:index' %}">Home</a></li>

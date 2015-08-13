@@ -1,10 +1,10 @@
 {
-  "name": "saleor",
-  "description": "A fork'n'play e-commerce in Django",
-  "repository": "https://github.com/mirumee/saleor",
-  "website": "http://getsaleor.com/",
-  "logo": "https://mirumee.com/img/opensource-saleor.png",
-  "keywords": ["saleor", "e-commerce", "django"],
+  "name": "GALLANT",
+  "description": "Affordable quality flowers on demand",
+  "repository": "https://github.com/jw84/gallant",
+  "website": "",
+  "logo": "",
+  "keywords": ["flowers delivery", "on demand flowers", "uber for flowers"],
   "env": {
     "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git",
     "DJANGO_SETTINGS_MODULE": "saleor.settings",

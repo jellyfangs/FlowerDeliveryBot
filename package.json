@@ -1,17 +1,17 @@
 {
-  "name": "saleor",
-  "version": "0.0.0",
+  "name": "GALLANT",
+  "version": "0.0.1",
   "main": "Gruntfile.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mirumee/saleor.git"
+    "url": "git://github.com/jw84/gallant.git"
   },
-  "author": "Mirumee Software",
+  "author": "GALLANT",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/mirumee/saleor/issues"
+    "url": "https://github.com/jw84/gallant/issues"
   },
-  "homepage": "http://getsaleor.com/",
+  "homepage": "",
   "engines": {
     "node": "0.10.x"
   },
