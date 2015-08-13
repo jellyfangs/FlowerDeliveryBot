@@ -26,27 +26,27 @@
         <div class="col-sm-6 col-sm-push-6">
             <h1 itemprop="name">
                 {{ product }}
+
+                {% if product.is_in_stock %}
+                    {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
+                        {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
+                            <p class="pull-right" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                {% if undiscounted.min_price != price_range.min_price %}
+                                    <span class="price undiscounted">{% price_range undiscounted %}</span>
+                                    <br>
+                                    <span class="price">{% price_range price_range %}</span>
+                                    <br>
+                                    <small class="label label-success">{% trans "You save" %} {% gross discount %}</small>
+                                {% else %}
+                                    <span class="price">{% price_range price_range %}</span>
+                                {% endif %}
+                            </p>
+                        {% endwith %}
+                    {% endwith %}
+                {% endif %}
             </h1>
 
-            {% if product.is_in_stock %}
-                {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
-                    {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
-                        <p class="lead" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                            {% if undiscounted.min_price != price_range.min_price %}
-                                <span class="price undiscounted">{% price_range undiscounted %}</span>
-                                <br>
-                                <span class="price">{% price_range price_range %}</span>
-                                <br>
-                                <small class="label label-success">{% trans "You save" %} {% gross discount %}</small>
-                            {% else %}
-                                <span class="price">{% price_range price_range %}</span>
-                            {% endif %}
-                        </p>
-                    {% endwith %}
-                {% endwith %}
-            {% endif %}
-
-            <hr>
+            <br>
 
             <div class="visible-xs">
                 {% if product.images.first %}
@@ -54,16 +54,22 @@
                 {% else %}
                     <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
                 {% endif %}
-
-                <hr>
             </div>
+
+            <div itemprop="description">
+                <blockquote>
+                  <p>{{ product.description|markdown }}</p>
+                </blockquote>
+            </div>
+
+            <br>
 
             {% if product.is_in_stock %}
                 {% block orderform %}
                 <form role="form" class="product-form form-vertical" method="post" action=".">
                     {% csrf_token %}
                     {{ form|as_vertical_form }}
-
+                    <br>
                     <div class="form-group">
                         <button class="btn btn-lg btn-block btn-primary">
                             {% trans "Add to cart" %}
@@ -74,13 +80,6 @@
             {% else %}
                 <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>
             {% endif %}
-
-            <hr>
-
-            <div itemprop="description">
-                {{ product.description|markdown }}
-            </div>
-
         </div>
 
         {% with images=product.images.all %}
@@ -119,6 +118,7 @@
                 {% endfor %}
             </div>
 
+            {% if images.count > 1 %}
             <div class="product-gallery row">
                 {% for image in images %}
                 <a href="{{ image.image.url }}" target="_blank" class="product-gallery-item col-xs-6 col-md-3">
@@ -126,6 +126,7 @@
                 </a>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
         {% endwith %}
     </div>
