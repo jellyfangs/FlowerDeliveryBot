@@ -10,6 +10,23 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+    <div class="page-header">
+      <h1><i class="glyphicon glyphicon-user"></i> {{ user }} <small>Your Orders</small></h1>
+    </div>
+
+    <ul class="nav nav-pills">
+      <li role="presentation"><a href="{% url "profile:details" %}">{% trans "Addresses" %}</a></li>
+      <li role="presentation"  class="active"><a href="{% url 'profile:orders' %}">{% trans "Orders" %}</a></li>
+      <li role="presentation"><a href="{% url 'registration:request_email_change' %}">{% trans 'Change your email' %}</a></li>
+      <li role="presentation"><a href="{% url 'registration:change_password' %}">{% trans 'Change your password' %}</a></li>
+        {% if user.is_staff %}
+        <li role="presentation"><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li> 
+        {% endif %}
+      <li role="presentation" class="pull-right"><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
+    </ul>
+
+    <br>
+
     <table class="table table-striped">
         <thead>
             <tr>

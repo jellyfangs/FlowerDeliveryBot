@@ -25,7 +25,7 @@
 
     <body itemscope itemtype="http://schema.org/WebPage">
         {% block header %}
-            <header class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+            <header class="navbar navbar-default" role="navigation">
                 <nav class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -45,14 +45,15 @@
                                     </a>
                                 </li>
                             {% endfor %}
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
+                            {% if request.cart %}
                             <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Shopping cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %} <b class="caret"></b></a>
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {# trans "Shopping cart" #} {% if request.cart %}<span class="label label-danger">{{ request.cart.count }}</span>{% endif %}</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
-                                    {% if request.cart %}
+                                    <li><a href="{% url "checkout:index" %}">{% trans "Proceed to checkout" %}</a></li>
                                     <li class="divider"></li>
+                                    <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
+                                    <li class="divider"></li>
+                                    <ol>
                                     {% for item in request.cart %}
                                     <li>
                                         <a href="{% url 'product:details' slug=item.data.product_slug product_id=item.data.product_id %}">
@@ -60,13 +61,15 @@
                                         </a>
                                     </li>
                                     {% endfor %}
-                                    <li class="divider"></li>
-                                    <li><a href="{% url "checkout:index" %}">{% trans "Proceed to checkout" %}</a></li>
-                                    {% endif %}
+                                    </ol>
                                 </ul>
                             </li>
+                            {% endif %}
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
                             {% if user.is_authenticated %}
-                            <li class="dropdown">
+                            <p class="navbar-text navbar-right">Signed in as <a href="{% url "profile:details" %}" class="navbar-link">{{ user }}</a></p>
+<!--                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="."><i class="glyphicon glyphicon-user"></i> {{ user }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{% url "profile:details" %}">{% trans "Your profile" %}</a></li>
@@ -79,10 +82,8 @@
                                     <li><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
                                   </ul>
                             </li>
-                            {% else %}
-                            <li>
-                                <a href="{% url "registration:login" %}">Log in</a>
-                            </li>
+ -->                            {% else %}
+                            <li><a href="{% url "registration:login" %}">Log in</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -100,6 +101,23 @@
         </div>
         {% endif %}
         <div class="container">
+            {% block outercontent %}
+            <div class="row">
+                <div class="col-sm-12">
+                    {% block content %}
+                        <div class="jumbotron">
+                          <h1>Hello, world!</h1>
+                          <p>...</p>
+                          <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+                        </div>
+                        <div class="row">
+                            {% include "category/_items.html" %}
+                        </div>
+                    {% endblock content %}
+                </div>
+            </div>
+            {% endblock outercontent %}
+            <br>
             {% block outerbreadcrumb %}
             <ul class="breadcrumb" itemprop="breadcrumb">
                 {% block breadcrumb %}
@@ -109,22 +127,11 @@
                 {% endblock breadcrumb %}
             </ul>
             {% endblock outerbreadcrumb %}
-            {% block outercontent %}
-            <div class="row">
-                <div class="col-sm-12">
-                    {% block content %}
-                        <div class="row">
-                            {% include "category/_items.html" %}
-                        </div>
-                    {% endblock content %}
-                </div>
-            </div>
-            {% endblock outercontent %}
         </div>
         {% block footer %}
             <footer>
                 <div class="container">
-                    <p class="pull-right">
+                    <p class="text-center">
                         GALLANT 2015
                     </p>
                 </div>

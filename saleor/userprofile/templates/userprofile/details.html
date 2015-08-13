@@ -9,22 +9,37 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-    <h2>{% trans "Profile" %}</h2>
-    <p>
-        <a href="{% url 'registration:change_password' %}" class="btn btn-default">{% trans 'Change your password' %}</a>
-        <a href="{% url 'registration:request_email_change' %}" class="btn btn-default">{% trans 'Change your email address' %}</a>
-    </p>
+    <div class="page-header">
+      <h1><i class="glyphicon glyphicon-user"></i> {{ user }} <small>Your Addresses</small></h1>
+    </div>
 
+    <ul class="nav nav-pills">
+      <li role="presentation" class="active"><a href="{% url "profile:details" %}">{% trans "Addresses" %}</a></li>
+      <li role="presentation"><a href="{% url 'profile:orders' %}">{% trans "Orders" %}</a></li>
+      <li role="presentation"><a href="{% url 'registration:request_email_change' %}">{% trans 'Change your email' %}</a></li>
+      <li role="presentation"><a href="{% url 'registration:change_password' %}">{% trans 'Change your password' %}</a></li>
+        {% if user.is_staff %}
+        <li role="presentation"><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li> 
+        {% endif %}
+      <li role="presentation" class="pull-right"><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
+    </ul>
 
-    <h3>{% trans "Your address book" %}</h3>
+    <h3>
+        {% trans "Your address book" %}
+
+        <div class="pull-right">
+            <a href="{% url 'profile:address-create' %}" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> {% trans "Add new address" %}</a>
+        </div>
+    </h3>
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <th class="col-sm-2">{% trans "Short alias" %}</th>
-                <th class="col-sm-4">{% trans "Addressee" %}</th>
+                <th class="col-sm-2">{% trans "Nickname" %}</th>
+                <th class="col-sm-3">{% trans "Full Name" %}</th>
                 <th class="col-sm-2">{% trans "Billing" %}</th>
                 <th class="col-sm-2">{% trans "Shipping" %}</th>
-                <th class="col-sm-2"></th>
+                <th class="col-sm-3"></th>
             </tr>
         </thead>
         <tbody>
@@ -33,7 +48,7 @@
                 <th class="col-sm-2">
                     {{ address }}
                 </th>
-                <td class="col-sm-4">
+                <td class="col-sm-3">
                     {{ address }}
                 </td>
                 <td class="col-sm-2">
@@ -56,7 +71,7 @@
                     </form>
                     {% endif %}
                 </td>
-                <td class="col-sm-2">
+                <td class="col-sm-3">
                     <a href="{% url 'profile:address-edit' pk=address.pk %}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i> {% trans "Edit" %}</a>
                     <a href="{% url 'profile:address-delete' pk=address.pk %}" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i> {% trans "Delete" %}</a>
                 </td>
@@ -64,11 +79,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <div>
-        <a href="{% url 'profile:address-create' %}" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> {% trans "Add new address" %}</a>
-    </div>
-
 
 {% endblock content %}
 
