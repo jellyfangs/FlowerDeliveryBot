@@ -81,15 +81,15 @@
         </div>
     {% endfor %}
 
-    {% with total=checkout.get_total %}
+    {# with total=checkout.get_total #}
         <div class="alert alert-success">
             {% trans "Your total will be" %}:
-            <strong>{% gross total %}</strong>
+            <strong>{# gross total #}</strong>
             {% if total.tax %}
                 ({% blocktrans with tax=total.tax|floatformat:2 currency=total.currency %}includes {{ tax }} <span class="currency">{{ currency }}</span> tax{% endblocktrans %})
             {% endif %}
         </div>
-    {% endwith %}
+    {# endwith #}
 
     {% if all_steps_valid %}
         <form method="post">

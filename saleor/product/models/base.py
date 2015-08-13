@@ -1,3 +1,10 @@
+"""
+    Changelog
+    - Commented out weights
+    - Shipping required == false
+"""
+
+
 from __future__ import unicode_literals
 from decimal import Decimal
 import datetime
@@ -21,7 +28,7 @@ from unidecode import unidecode
 from versatileimagefield.fields import VersatileImageField
 
 from .discounts import get_product_discounts
-from .fields import WeightField
+# from .fields import WeightField
 from saleor.product.utils import get_attributes_display_map
 
 
@@ -72,23 +79,23 @@ class ProductManager(InheritanceManager):
 
 @python_2_unicode_compatible
 class Product(models.Model, ItemRange):
+    categories = models.ManyToManyField(
+        Category, verbose_name=pgettext_lazy('Product field', 'categories'),
+        related_name='products')
     name = models.CharField(
         pgettext_lazy('Product field', 'name'), max_length=128)
     description = models.TextField(
         verbose_name=pgettext_lazy('Product field', 'description'))
-    categories = models.ManyToManyField(
-        Category, verbose_name=pgettext_lazy('Product field', 'categories'),
-        related_name='products')
     price = PriceField(
         pgettext_lazy('Product field', 'price'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
-    weight = WeightField(
-        pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
-        max_digits=6, decimal_places=2)
-    available_on = models.DateField(
-        pgettext_lazy('Product field', 'available on'), blank=True, null=True)
+    # weight = WeightField(
+    #     pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
+    #     max_digits=6, decimal_places=2)
     attributes = models.ManyToManyField(
         'ProductAttribute', related_name='products', blank=True, null=True)
+    available_on = models.DateField(
+        pgettext_lazy('Product field', 'available on'), blank=True, null=True)
 
     objects = ProductManager()
 
@@ -153,6 +160,7 @@ class Product(models.Model, ItemRange):
 
 @python_2_unicode_compatible
 class ProductVariant(models.Model, Item):
+    product = models.ForeignKey(Product, related_name='variants')
     sku = models.CharField(
         pgettext_lazy('Variant field', 'SKU'), max_length=32, unique=True)
     name = models.CharField(
@@ -161,11 +169,10 @@ class ProductVariant(models.Model, Item):
         pgettext_lazy('Variant field', 'price override'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
         blank=True, null=True)
-    weight_override = WeightField(
-        pgettext_lazy('Variant field', 'weight override'),
-        unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
-        blank=True, null=True)
-    product = models.ForeignKey(Product, related_name='variants')
+    # weight_override = WeightField(
+    #     pgettext_lazy('Variant field', 'weight override'),
+    #     unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
+    #     blank=True, null=True)
     attributes = JSONField(pgettext_lazy('Variant field', 'attributes'),
                            default={})
 
@@ -177,8 +184,8 @@ class ProductVariant(models.Model, Item):
     def __str__(self):
         return self.name or self.sku
 
-    def get_weight(self):
-        return self.weight_override or self.product.weight
+    # def get_weight(self):
+    #     return self.weight_override or self.product.weight
 
     def check_quantity(self, quantity):
         available_quantity = self.get_stock_quantity()
@@ -211,7 +218,8 @@ class ProductVariant(models.Model, Item):
             'unit_price': str(self.get_price_per_item().gross)}
 
     def is_shipping_required(self):
-        return True
+        # return True
+        return False
 
     def is_in_stock(self):
         return any([stock_item.quantity > 0 for stock_item in self.stock.all()])

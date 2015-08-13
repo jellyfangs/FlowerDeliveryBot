@@ -74,8 +74,8 @@ class ProductVariantForm(forms.ModelForm):
         super(ProductVariantForm, self).__init__(*args, **kwargs)
         self.fields['price_override'].widget.attrs[
             'placeholder'] = self.instance.product.price.gross
-        self.fields['weight_override'].widget.attrs[
-            'placeholder'] = self.instance.product.weight
+        # self.fields['weight_override'].widget.attrs[
+        #     'placeholder'] = self.instance.product.weight
 
 
 class VariantAttributeForm(forms.ModelForm):

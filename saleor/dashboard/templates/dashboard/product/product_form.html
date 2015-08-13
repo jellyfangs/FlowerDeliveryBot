@@ -79,6 +79,7 @@
     <div class="row tab-content" id="details">
         <form method="post" id="form-product" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ product_form.categories|materializecss:"input-field s12" }}
             {{ product_form.name|materializecss:"s12 m8" }}
             {{ product_form.price|materializecss:"s12 m4" }}
 
@@ -90,10 +91,9 @@
 
             <div class="col s12 l4">
                 <div class="row">
-                    {{ product_form.weight|materializecss:"input-field s12" }}
-                    {{ product_form.categories|materializecss:"input-field s12" }}
-                    {{ product_form.attributes|materializecss:"input-field s12" }}
+                    {# product_form.weight|materializecss:"input-field s12" #}
                     {{ product_form.available_on|materializecss:"input-field s12" }}
+                    {{ product_form.attributes|materializecss:"input-field s12" }}
                 </div>
             </div>
 
