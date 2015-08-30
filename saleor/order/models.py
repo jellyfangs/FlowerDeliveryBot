@@ -31,14 +31,10 @@ from ..delivery import get_delivery
 class Order(models.Model, ItemSet):
     STATUS_CHOICES = (
         ('new', pgettext_lazy('Order status field value', 'Processing')),
-        ('cancelled', pgettext_lazy('Order status field value',
-                                    'Cancelled')),
-        ('payment-pending', pgettext_lazy('Order status field value',
-                                          'Waiting for payment')),
-        ('fully-paid', pgettext_lazy('Order status field value',
-                                     'Fully paid')),
-        ('shipped', pgettext_lazy('Order status field value',
-                                  'Shipped')))
+        ('cancelled', pgettext_lazy('Order status field value', 'Cancelled')),
+        ('payment-pending', pgettext_lazy('Order status field value', 'Waiting for payment')),
+        ('fully-paid', pgettext_lazy('Order status field value', 'Fully paid')),
+        ('shipped', pgettext_lazy('Order status field value', 'Shipped')))
     status = models.CharField(
         pgettext_lazy('Order field', 'order status'),
         max_length=32, choices=STATUS_CHOICES, default='new')
@@ -51,19 +47,14 @@ class Order(models.Model, ItemSet):
     user = models.ForeignKey(
         User, blank=True, null=True, related_name='orders',
         verbose_name=pgettext_lazy('Order field', 'user'))
-    tracking_client_id = models.CharField(max_length=36, blank=True,
-                                          editable=False)
-    billing_address = models.ForeignKey(Address, related_name='+',
-                                        editable=False)
-    shipping_address = models.ForeignKey(Address, related_name='+',
-                                         editable=False, null=True)
-    shipping_method = models.CharField(
-        pgettext_lazy('Order field', 'Delivery method'),
-        max_length=255, blank=True)
-    anonymous_user_email = models.EmailField(blank=True, default='',
-                                             editable=False)
-    token = models.CharField(
-        pgettext_lazy('Order field', 'token'), max_length=36, unique=True)
+    tracking_client_id = models.CharField(max_length=36, blank=True, editable=False)
+    billing_address = models.ForeignKey(Address, related_name='+', editable=False)
+    shipping_address = models.ForeignKey(Address, related_name='+', editable=False, null=True)
+    fulfillment_address = models.ForeignKey(Address, related_name='+', editable=False, null=True)
+    shipping_method = models.CharField(pgettext_lazy('Order field', 'Delivery method'), max_length=255, blank=True)
+    fulfillment_address = models.CharField(pgettext_lazy('Order field', 'Fulfillment method'), max_length=255, blank=True)
+    anonymous_user_email = models.EmailField(blank=True, default='', editable=False)
+    token = models.CharField(pgettext_lazy('Order field', 'token'), max_length=36, unique=True)
 
     class Meta:
         ordering = ('-last_status_change',)
@@ -116,8 +107,10 @@ class Order(models.Model, ItemSet):
         return reverse('order:details', kwargs={'token': self.token})
 
     def get_delivery_total(self):
-        return sum([group.shipping_price for group in self.groups.all()],
-                   Price(0, currency=settings.DEFAULT_CURRENCY))
+        return sum([group.delivery_price for group in self.groups.all()], Price(0, currency=settings.DEFAULT_CURRENCY))
+
+    def get_shipping_total(self):
+        return sum([group.shipping_price for gorup in self.groups.all()], Price(0, currency=settings.DEFAULT_CURRENCY))
 
     def send_confirmation_email(self):
         email = self.get_user_email()
@@ -160,16 +153,23 @@ class DeliveryGroupManager(models.Manager):
 
 class DeliveryGroup(models.Model, ItemSet):
     STATUS_CHOICES = (
-        ('new',
-         pgettext_lazy('Delivery group status field value', 'Processing')),
-        ('cancelled', pgettext_lazy('Delivery group status field value',
-                                    'Cancelled')),
-        ('shipped', pgettext_lazy('Delivery group status field value',
-                                  'Shipped')))
+        ('new', pgettext_lazy('Delivery group status field value', 'Processing')),
+        ('cancelled', pgettext_lazy('Delivery group status field value', 'Cancelled')),
+        ('delivered', pgettext_lazy('Delivery group status field value', 'Delivered')),
+        ('shipped', pgettext_lazy('Delivery group status field value', 'Shipped')))
     status = models.CharField(
         pgettext_lazy('Delivery group field', 'delivery status'),
         max_length=32, default='new', choices=STATUS_CHOICES)
     order = models.ForeignKey(Order, related_name='groups', editable=False)
+    delivery_required = models.BooleanField(
+        pgettext_lazy('Delivery group field', 'delivery required'),
+        default=True)
+    delivery_price = PriceField(
+        pgettext_lazy('Delivery group field', 'delivery price'),
+        currency=settings.DEFAULT_CURRENCY, max_digits=12,
+        decimal_places=4,
+        default=0,
+        editable=False)
     shipping_required = models.BooleanField(
         pgettext_lazy('Delivery group field', 'shipping required'),
         default=True)
@@ -183,8 +183,7 @@ class DeliveryGroup(models.Model, ItemSet):
     objects = DeliveryGroupManager()
 
     def __str__(self):
-        return pgettext_lazy(
-            'Delivery group str', 'Shipment #%s') % self.pk
+        return pgettext_lazy('Delivery group str', 'Shipment #%s') % self.pk
 
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, list(self))
@@ -200,7 +199,7 @@ class DeliveryGroup(models.Model, ItemSet):
 
     def get_total(self, **kwargs):
         subtotal = super(DeliveryGroup, self).get_total(**kwargs)
-        return subtotal + self.shipping_price
+        return subtotal + self.delivery_price + self.shipping_price
 
     def add_items_from_partition(self, partition):
         for item_line in partition:
@@ -215,8 +214,8 @@ class DeliveryGroup(models.Model, ItemSet):
                 unit_price_gross=price.gross)
 
     def update_delivery_cost(self):
-        if self.order.is_shipping_required():
-            delivery = get_delivery(self.order.shipping_method)
+        if self.order.is_delivery_required():
+            delivery = get_delivery(self.order.delivery_method)
             skus = [line.product_sku for line in self]
             variants = get_list_or_404(
                 ProductVariant.objects.select_related('product'), sku__in=skus)
@@ -226,17 +225,41 @@ class DeliveryGroup(models.Model, ItemSet):
                 data = {'product': variants_map[line.product_sku],
                         'quantity': line.get_quantity()}
                 items.append(CartLine(**data))
-            self.shipping_price = delivery.get_delivery_total(items)
+            self.delivery_price = delivery.get_delivery_total(items)
+            self.save()
+
+    def update_shipping_cost(self):
+        if self.order.is_delivery_required():
+            delivery = get_delivery(self.order.shipping_method)
+            skus = [line.product_sku for line in self]
+            variants = get_list_or_404(
+                ProductVariant.obejcts.select_related('product'), sku__in=skus)
+            variants_map = {variant.sku: variant for variant in variants}
+            items = []
+            for line in self:
+                data = {'product': variants_map[line.product_sku],
+                        'quantity': line.get_quantity()}
+                items.append(CartLine(**data))
+            self.shipping_price = delivery.get_shipping_total(items)
             self.save()
 
     def get_total_quantity(self):
         return sum([item.get_quantity() for item in self])
 
+    def is_delivery_required(self):
+        return self.delivery_required
+
     def is_shipping_required(self):
         return self.shipping_required
 
+    def can_delivery(self):
+        return self.is_delivery_required() and self.status == 'new'
+
     def can_ship(self):
         return self.is_shipping_required() and self.status == 'new'
+
+    def can_fulfill(self):
+        return self.is_delivery_required() and self.is_shipping_required() and self.status == 'new'
 
 
 class OrderedItemManager(models.Manager):

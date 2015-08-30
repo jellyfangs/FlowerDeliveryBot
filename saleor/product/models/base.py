@@ -28,7 +28,7 @@ from unidecode import unidecode
 from versatileimagefield.fields import VersatileImageField
 
 from .discounts import get_product_discounts
-# from .fields import WeightField
+from .fields import WeightField
 from saleor.product.utils import get_attributes_display_map
 
 
@@ -91,7 +91,7 @@ class Product(models.Model, ItemRange):
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
     # weight = WeightField(
     #     pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
-    #     max_digits=6, decimal_places=2)
+    #     max_digits=6, decimal_places=2, blank=True, null=True)
     attributes = models.ManyToManyField(
         'ProductAttribute', related_name='products', blank=True, null=True)
     available_on = models.DateField(
@@ -184,8 +184,8 @@ class ProductVariant(models.Model, Item):
     def __str__(self):
         return self.name or self.sku
 
-    # def get_weight(self):
-    #     return self.weight_override or self.product.weight
+    def get_weight(self):
+        return self.weight_override or self.product.weight
 
     def check_quantity(self, quantity):
         available_quantity = self.get_stock_quantity()
@@ -217,10 +217,14 @@ class ProductVariant(models.Model, Item):
             'variant_id': self.pk,
             'unit_price': str(self.get_price_per_item().gross)}
 
+    #TODOS change these into system wide settings
+    def is_delivery_required(self):
+        return True
+
     def is_shipping_required(self):
-        # return True
         return False
 
+    #TODOS reverse stock to generate jobs
     def is_in_stock(self):
         return any([stock_item.quantity > 0 for stock_item in self.stock.all()])
 
@@ -237,8 +241,7 @@ class ProductVariant(models.Model, Item):
             return smart_text(self)
 
     def display_product(self, attributes=None):
-        return '%s (%s)' % (smart_text(self.product),
-                            self.display_variant(attributes=attributes))
+        return '%s (%s)' % (smart_text(self.product), self.display_variant(attributes=attributes))
 
 
 @python_2_unicode_compatible

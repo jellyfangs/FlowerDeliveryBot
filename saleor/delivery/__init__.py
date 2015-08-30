@@ -27,11 +27,24 @@ class DummyShipping(BaseDelivery):
     def __str__(self):
         return 'Dummy shipping'
 
-    def get_delivery_total(self, items, **kwargs):
+    def get_shipping_total(self, items, **kwargs):
         weight = sum(
             line.product.get_weight() * line.quantity for line in items)
         return Price(weight, currency=settings.DEFAULT_CURRENCY)
         return Price(weight, currency=settings.DEFAULT_CURRENCY)
+
+
+@python_2_unicode_compatible
+class DummyDelivery(BaseDelivery):
+    name = 'dummy_delivery'
+
+    def __str__(self):
+        return 'Local delivery'
+
+    def get_delivery_total(self, items, **kwargs):
+        total = 0
+        return Price(total, currency=settings.DEFAULT_CURRENCY)
+        return Price(total, currency=settings.DEFAULT_CURRENCY)
 
 
 def get_delivery_options_for_items(items, **kwargs):
@@ -40,6 +53,8 @@ def get_delivery_options_for_items(items, **kwargs):
     else:
         raise ValueError('Unknown delivery type')
 
+def get_shipping(name):
+    return DummyShipping()
 
 def get_delivery(name):
-    return DummyShipping()
+    return DummyDelivery()

@@ -76,7 +76,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, is_staff=True,
                                 is_superuser=True, **extra_fields)
 
-    def store_address(self, user, address, billing=False, shipping=False):
+    def store_address(self, user, address, billing=False, shipping=False, delivery=False):
         entry = Address.objects.store_address(user, address)
         changed = False
         if billing and not user.default_billing_address_id:
@@ -84,6 +84,9 @@ class UserManager(BaseUserManager):
             changed = True
         if shipping and not user.default_shipping_address_id:
             user.default_shipping_address = entry
+            changed = True
+        if delivery and not user.default_delivery_address_id:
+            user.default_delivery_address = entry
             changed = True
         if changed:
             user.save()
@@ -116,6 +119,10 @@ class User(PermissionsMixin, models.Model):
         Address, related_name='+', null=True, blank=True,
         on_delete=models.SET_NULL,
         verbose_name=pgettext_lazy('User field', 'default billing address'))
+    default_delivery_address = models.ForeignKey(
+        Address, related_name='+', null=True, blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=pgettext_lazy('User field', 'default delivery address'))
 
     USERNAME_FIELD = 'email'
 
