@@ -116,8 +116,7 @@ class Product(models.Model, ItemRange):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('product:details', kwargs={'slug': self.get_slug(),
-                                                  'product_id': self.id})
+        return reverse('product:details', kwargs={'slug': self.get_slug(), 'product_id': self.id})
 
     def get_slug(self):
         return slugify(smart_text(unidecode(self.name)))
@@ -138,15 +137,13 @@ class Product(models.Model, ItemRange):
         price = self.get_price_range().min_price
         return self.get_formatted_price(price)
 
-    admin_get_price_min.short_description = pgettext_lazy(
-        'Product admin page', 'Minimum price')
+    admin_get_price_min.short_description = pgettext_lazy('Product admin page', 'Minimum price')
 
     def admin_get_price_max(self):
         price = self.get_price_range().max_price
         return self.get_formatted_price(price)
 
-    admin_get_price_max.short_description = pgettext_lazy(
-        'Product admin page', 'Maximum price')
+    admin_get_price_max.short_description = pgettext_lazy('Product admin page', 'Maximum price')
 
     def is_in_stock(self):
         return any(variant.is_in_stock() for variant in self)
@@ -173,8 +170,9 @@ class ProductVariant(models.Model, Item):
     #     pgettext_lazy('Variant field', 'weight override'),
     #     unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
     #     blank=True, null=True)
-    attributes = JSONField(pgettext_lazy('Variant field', 'attributes'),
-                           default={})
+    attributes = JSONField(pgettext_lazy('Variant field', 'attributes'), default={})
+    is_delivery_required = models.BooleanField(blank=True, default=False)
+    is_shipping_required = models.BooleanField(blank=True, default=False)
 
     objects = InheritanceManager()
 
@@ -217,12 +215,12 @@ class ProductVariant(models.Model, Item):
             'variant_id': self.pk,
             'unit_price': str(self.get_price_per_item().gross)}
 
-    #TODOS change these into system wide settings
-    def is_delivery_required(self):
-        return True
+    #TODOS change these into product settings
+    # def is_delivery_required(self):
+    #     return True
 
-    def is_shipping_required(self):
-        return False
+    # def is_shipping_required(self):
+    #     return True
 
     #TODOS reverse stock to generate jobs
     def is_in_stock(self):

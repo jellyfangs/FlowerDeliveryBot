@@ -10,18 +10,31 @@ class ShippingForm(AddressForm):
     use_billing = forms.BooleanField(initial=True)
 
 
+class DeliveryForm(AddressForm):
+
+    use_billing = forms.BooleanField(initial=True)
+
+
 class DeliveryForm(forms.Form):
 
-    method = forms.ChoiceField(label=_('Shipping method'))
+    method = forms.ChoiceField(label=_('Delivery method'))
 
     def __init__(self, delivery_choices, *args, **kwargs):
         super(DeliveryForm, self).__init__(*args, **kwargs)
         method_field = self.fields['method']
         method_field.choices = delivery_choices
-        if len(delivery_choices) == 1:
-            method_field.initial = delivery_choices[0][1]
-            method_field.widget = forms.HiddenInput()
 
+class ShippingForm(forms.Form):
+
+    method = forms.ChoiceField(label=_('Shipping method'))
+
+    def __init__(self, shipping_choices, *args, **kwargs):
+        super(ShippingForm, self).__init__(*args, **kwargs)
+        method_field = self.fields['method']
+        method_field.choices = shipping_choices
+        if len(shipping_choices) == 1:
+            method_field.initial = shipping_choices[0][1]
+            method_field.widget = forms.HiddenInput()
 
 class AnonymousEmailForm(forms.Form):
 

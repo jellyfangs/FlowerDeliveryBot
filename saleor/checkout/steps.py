@@ -7,10 +7,10 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from satchless.process import InvalidData
 
-from .forms import DeliveryForm
+from .forms import DeliveryForm, ShippingForm
 from ..checkout.forms import AnonymousEmailForm
 from ..core.utils import BaseStep
-from ..delivery import get_delivery_options_for_items
+from ..delivery import get_shipping_options_for_items
 from ..userprofile.forms import AddressForm
 from ..userprofile.models import Address, User
 
@@ -128,19 +128,18 @@ class BillingAddressStep(BaseAddressStep):
             raise InvalidData()
 
 
-class ShippingStep(BaseAddressStep):
-    template = 'checkout/shipping.html'
-    title = _('Shipping Address')
+class DeliveryStep(BaseAddressStep):
+    template = 'checkout/delivery.html'
+    title = _('Delivery Address')
 
-    def __init__(self, request, storage, cart,
-                 default_address=None):
+    def __init__(self, request, storage, cart, default_address=None):
         self.cart = cart
         address_data = storage.get('address', {})
         if not address_data and default_address:
             address = default_address
         else:
             address = Address(**address_data)
-        super(ShippingStep, self).__init__(request, storage, address)
+        super(DeliveryStep, self).__init__(request, storage, address)
         delivery_choices = list(
             (m.name, m) for m in get_delivery_options_for_items(
                 self.cart, address=address))
@@ -189,6 +188,67 @@ class ShippingStep(BaseAddressStep):
     def process(self, extra_context=None):
         context = dict(extra_context or {})
         context['delivery_form'] = self.forms['delivery']
+        return super(ShippingStep, self).process(extra_context=context)
+
+
+class ShippingStep(BaseAddressStep):
+    template = 'checkout/shipping.html'
+    title = _('Shipping Address')
+
+    def __init__(self, request, storage, cart, default_address=None):
+        self.cart = cart
+        address_data = storage.get('address', {})
+        if not address_data and default_address:
+            address = default_address
+        else:
+            address = Address(**address_data)
+        super(ShippingStep, self).__init__(request, storage, address)
+        shipping_choices = list((m.name, m) for m in get_shipping_options_for_items(self.cart, address=address))
+        selected_method_name = storage.get('shipping_method')
+        selected_method = None
+        for method_name, method in shipping_choices:
+            if method_name == selected_method_name:
+                selected_method = method
+                break
+        if selected_method is None:
+            # TODO: find cheapest not first
+            selected_method_name, selected_method = shipping_choices[0]
+        self.shipping_method = selected_method
+        self.forms['shipping'] = ShippingForm(
+            shipping_choices, request.POST or None,
+            initial={'method': selected_method_name})
+
+    def __str__(self):
+        return 'shipping-address'
+
+    def save(self):
+        shipping_form = self.forms['shipping']
+        self.storage['address'] = Address.objects.as_data(self.address)
+        shipping_method = shipping_form.cleaned_data['method']
+        self.storage['shipping_method'] = shipping_method
+
+    def validate(self):
+        super(ShippingStep, self).validate()
+        if 'shipping_method' not in self.storage:
+            raise InvalidData()
+
+    def forms_are_valid(self):
+        base_forms_are_valid = super(ShippingStep, self).forms_are_valid()
+        shipping_form = self.forms['shipping']
+        if base_forms_are_valid and shipping_form.is_valid():
+            return True
+        return False
+
+    def add_to_order(self, order):
+        self.address.save()
+        order.shipping_method = self.delivery_method.name
+        order.shipping_address = self.address
+        if order.user:
+            User.objects.store_address(order.user, self.address, shipping=True)
+
+    def process(self, extra_context=None):
+        context = dict(extra_context or {})
+        context['shipping_form'] = self.forms['shipping']
         return super(ShippingStep, self).process(extra_context=context)
 
 

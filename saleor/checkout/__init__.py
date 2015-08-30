@@ -140,6 +140,15 @@ class Checkout(ProcessManager):
             total_with_delivery = partition.get_total(**kwargs) + delivery_cost
             yield partition, delivery_cost, total_with_delivery
 
+    def get_shippings(self, **kwargs):
+        for partition in self.cart.partition():
+            if self.shipping:
+                shipping_cost = self.shipping.shipping_method.get_shipping_total(partition)
+            else:
+                shipping_cost = Price(0, currency=settings.DEFAULT_CURRENCY)
+            total_with_shipping = partition.get_total(**kwargs) + shipping_cost
+            yield partition, shipping_cost, total_with_shipping
+
     def create_order(self):
         order = Order()
         if self.request.user.is_authenticated():

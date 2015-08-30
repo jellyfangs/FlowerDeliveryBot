@@ -40,7 +40,7 @@
         {% endif %}
     </div>
 
-    {% for delivery, delivery_cost, total_with_delivery in checkout.get_deliveries %}
+    {% for shipping, shipping_cost, total_with_shipping in checkout.get_shippings %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 {% blocktrans with number=forloop.counter %}Shipment #{{ number }}{% endblocktrans %}
@@ -56,24 +56,24 @@
                 <tfoot>
                     <tr>
                         <th colspan="2">{% trans "Total" %}</th>
-                        <th class="text-right">{% gross total_with_delivery %}</th>
+                        <th class="text-right">{% gross total_with_shipping %}</th>
                     </tr>
                 </tfoot>
                 <tbody>
-                    {% for item in delivery %}
+                    {% for item in shipping %}
                         <tr>
                             <td>{{ item.product }}{% if item.quantity != 1 %} <em>×{{ item.quantity }}</em>{% endif %}</td>
                             <td class="text-right">{% gross item.get_price_per_item %}</td>
                             <td class="text-right">{% gross item.get_total %}</td>
                         </tr>
                     {% endfor %}
-                    {% if delivery_cost.gross %}
+                    {% if shipping_cost.gross %}
                         <tr>
                             <td>
                                 {% trans "Shipping" %}
                             </td>
-                            <td class="text-right">{% gross delivery_cost %}</td>
-                            <td class="text-right">{% gross delivery_cost %}</td>
+                            <td class="text-right">{% gross shipping_cost %}</td>
+                            <td class="text-right">{% gross shipping_cost %}</td>
                         </tr>
                     {% endif %}
                 </tbody>

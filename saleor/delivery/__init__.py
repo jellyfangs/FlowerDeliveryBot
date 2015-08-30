@@ -28,8 +28,8 @@ class DummyShipping(BaseDelivery):
         return 'Dummy shipping'
 
     def get_shipping_total(self, items, **kwargs):
-        weight = sum(
-            line.product.get_weight() * line.quantity for line in items)
+        # weight = sum(line.product.get_weight() * line.quantity for line in items)
+        weight = 0
         return Price(weight, currency=settings.DEFAULT_CURRENCY)
         return Price(weight, currency=settings.DEFAULT_CURRENCY)
 
@@ -47,7 +47,7 @@ class DummyDelivery(BaseDelivery):
         return Price(total, currency=settings.DEFAULT_CURRENCY)
 
 
-def get_delivery_options_for_items(items, **kwargs):
+def get_shipping_options_for_items(items, **kwargs):
     if 'address' in kwargs:
         yield DummyShipping()
     else:

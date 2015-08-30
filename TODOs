@@ -1,0 +1,8 @@
+augment products with shipping or delivery options
+
+delivery does not req weight attributes
+
+drivers have allocations for slots for delivery
+
+augment stock checks to generate jobs list if not enough stock availabl 
+
