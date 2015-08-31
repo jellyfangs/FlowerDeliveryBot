@@ -97,7 +97,10 @@ class Cart(cart.Cart):
         return CartLine(product, quantity, data=data, discounts=self.discounts)
 
     def is_shipping_required(self):
-        return any(line.is_shipping_required() for line in self)
+        return any(line.is_shipping_required for line in self)
+
+    def is_delivery_required(self):
+        return any(line.is_delivery_required for line in self)
 
     def partition(self):
         return partition(

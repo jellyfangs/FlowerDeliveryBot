@@ -17,6 +17,8 @@
     <table class="table table-striped cart" id="cart-items">
         <thead>
         <tr>
+            <th class="col-sm-1 hidden-xs text-right">{% trans "Shipping" %}</th>
+            <th class="col-sm-1 hidden-xs text-right">{% trans "Delivery" %}</th>
             <th class="col-xs-5 col-sm-2 col-md-1">{% trans "Product" %}</th>
             <th class="col-sm-5 hidden-xs"></th>
             <th class="col-xs-6 col-sm-3 col-md-2">{% trans "Quantity" %}</th>
@@ -26,7 +28,7 @@
         </thead>
         <tfoot>
         <tr>
-            <td class="hidden-xs" colspan="2"></td>
+            <td class="hidden-xs" colspan="4"></td>
             <td class="col-xs-9 col-md-9 text-right lead" colspan="2">{% trans "Total" %}:
             <td class="col-xs-3 col-md-2 text-right lead"><b class="cart-total">{% gross cart.get_total %}</b></td>
         </tr>
@@ -35,6 +37,8 @@
         {% for group in cart %}
             {% for line in group %}
                 <tr class="cart-item">
+                    <td class="text-right hidden-xs">{{ line.product.is_shipping_required }}</td>
+                    <td class="text-right hidden-xs">{{ line.product.is_delivery_required }}</td>
                     <td class="hidden-xs">
                         <a href="{{ line.product.get_absolute_url }}">
                             {% if line.product.product.images.first %}

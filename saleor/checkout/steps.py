@@ -10,7 +10,7 @@ from satchless.process import InvalidData
 from .forms import DeliveryForm, ShippingForm
 from ..checkout.forms import AnonymousEmailForm
 from ..core.utils import BaseStep
-from ..delivery import get_shipping_options_for_items
+from ..delivery import get_shipping_options_for_items, get_delivery_options_for_items
 from ..userprofile.forms import AddressForm
 from ..userprofile.models import Address, User
 
@@ -135,14 +135,10 @@ class DeliveryStep(BaseAddressStep):
     def __init__(self, request, storage, cart, default_address=None):
         self.cart = cart
         address_data = storage.get('address', {})
-        if not address_data and default_address:
-            address = default_address
-        else:
-            address = Address(**address_data)
+        if not address_data and default_address: address = default_address
+        else: address = Address(**address_data)
         super(DeliveryStep, self).__init__(request, storage, address)
-        delivery_choices = list(
-            (m.name, m) for m in get_delivery_options_for_items(
-                self.cart, address=address))
+        delivery_choices = list((m.name, m) for m in get_delivery_options_for_items(self.cart, address=address))
         selected_method_name = storage.get('delivery_method')
         selected_method = None
         for method_name, method in delivery_choices:
@@ -158,7 +154,7 @@ class DeliveryStep(BaseAddressStep):
             initial={'method': selected_method_name})
 
     def __str__(self):
-        return 'shipping-address'
+        return 'delivery-address'
 
     def save(self):
         delivery_form = self.forms['delivery']
@@ -167,12 +163,12 @@ class DeliveryStep(BaseAddressStep):
         self.storage['delivery_method'] = delivery_method
 
     def validate(self):
-        super(ShippingStep, self).validate()
+        super(DeliveryStep, self).validate()
         if 'delivery_method' not in self.storage:
             raise InvalidData()
 
     def forms_are_valid(self):
-        base_forms_are_valid = super(ShippingStep, self).forms_are_valid()
+        base_forms_are_valid = super(DeliveryStep, self).forms_are_valid()
         delivery_form = self.forms['delivery']
         if base_forms_are_valid and delivery_form.is_valid():
             return True
@@ -180,15 +176,15 @@ class DeliveryStep(BaseAddressStep):
 
     def add_to_order(self, order):
         self.address.save()
-        order.shipping_method = self.delivery_method.name
-        order.shipping_address = self.address
+        order.delivery_method = self.delivery_method.name
+        order.delivery_method = self.address
         if order.user:
             User.objects.store_address(order.user, self.address, shipping=True)
 
     def process(self, extra_context=None):
         context = dict(extra_context or {})
         context['delivery_form'] = self.forms['delivery']
-        return super(ShippingStep, self).process(extra_context=context)
+        return super(DeliveryStep, self).process(extra_context=context)
 
 
 class ShippingStep(BaseAddressStep):
@@ -241,7 +237,7 @@ class ShippingStep(BaseAddressStep):
 
     def add_to_order(self, order):
         self.address.save()
-        order.shipping_method = self.delivery_method.name
+        order.shipping_method = self.shipping_method.name
         order.shipping_address = self.address
         if order.user:
             User.objects.store_address(order.user, self.address, shipping=True)

@@ -12,8 +12,7 @@ class VariantChoiceIterator(ModelChoiceIterator):
     def __init__(self, field):
         super(VariantChoiceIterator, self).__init__(field)
         self.product = self.queryset.instance if self.queryset else None
-        self.attributes = self.product.attributes.prefetch_related(
-            'values') if self.product else None
+        self.attributes = self.product.attributes.prefetch_related('values') if self.product else None
 
     def choice(self, obj):
         label = obj.display_variant(self.attributes)

@@ -6,7 +6,7 @@
 
 {% block forms %}
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {% trans "Billing address" %}
@@ -22,7 +22,7 @@
             </div>
         </div>
         {% if checkout.is_shipping_required %}
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {% trans "Shipping address" %}
@@ -34,6 +34,23 @@
                             <p class="text-danger">{% trans "No address given yet." %}</p>
                         {% endif %}
                         <p><a href="{{ checkout.shipping.get_absolute_url }}">{% trans "Edit shipping details" %}</a></p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if checkout.is_delivery_required %}
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {% trans "Delivery address" %}
+                    </div>
+                    <div class="panel-body">
+                        {% if checkout.delivery_address %}
+                            <address>{% include "userprofile/snippets/address-details.html" with address=checkout.delivery_address %}</address>
+                        {% else %}
+                            <p class="text-danger">{% trans "No address given yet." %}</p>
+                        {% endif %}
+                        <p><a href="{{ checkout.delivery.get_absolute_url }}">{% trans "Edit shipping details" %}</a></p>
                     </div>
                 </div>
             </div>

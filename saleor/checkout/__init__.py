@@ -4,7 +4,7 @@ from django.conf import settings
 from prices import Price
 from satchless.process import ProcessManager
 
-from .steps import BillingAddressStep, ShippingStep, SummaryStep
+from .steps import BillingAddressStep, ShippingStep, DeliveryStep, SummaryStep
 from ..cart import Cart
 from ..core import analytics
 from ..order.models import Order
@@ -34,12 +34,10 @@ class Checkout(ProcessManager):
         self.steps = []
         self.items = []
         try:
-            self.storage = CheckoutStorage(
-                request.session[STORAGE_SESSION_KEY])
+            self.storage = CheckoutStorage(request.session[STORAGE_SESSION_KEY])
         except KeyError:
             self.storage = CheckoutStorage()
-        self.cart = Cart.for_session_cart(request.cart,
-                                          discounts=request.discounts)
+        self.cart = Cart.for_session_cart(request.cart, discounts=request.discounts)
         self.generate_steps(self.cart)
 
     def __iter__(self):
@@ -47,16 +45,22 @@ class Checkout(ProcessManager):
 
     def generate_steps(self, cart):
         self.cart = cart
-        self.billing = BillingAddressStep(
-            self.request, self.get_storage('billing'))
+        self.billing = BillingAddressStep(self.request, self.get_storage('billing'))
         self.steps.append(self.billing)
-        if self.is_shipping_required():
+        if self.is_shipping_required:
             self.shipping = ShippingStep(
                 self.request, self.get_storage('shipping'),
                 self.cart, default_address=self.billing_address)
             self.steps.append(self.shipping)
         else:
             self.shipping = None
+        if self.is_delivery_required:
+            self.delivery = DeliveryStep(
+                self.request, self.get_storage('delivery'),
+                self.cart, default_address=self.billing_address)
+            self.steps.append(self.delivery)
+        else:
+            self.delivery = None
         summary_step = SummaryStep(
             self.request, self.get_storage('summary'), checkout=self)
         self.steps.append(summary_step)
@@ -128,7 +132,10 @@ class Checkout(ProcessManager):
         self.cart.clear()
 
     def is_shipping_required(self):
-        return self.cart.is_shipping_required()
+        return self.cart.is_shipping_required
+
+    def is_delivery_required(self):
+        return self.cart.is_delivery_required
 
     def get_deliveries(self, **kwargs):
         for partition in self.cart.partition():

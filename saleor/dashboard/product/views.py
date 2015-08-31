@@ -41,13 +41,11 @@ def product_create(request):
 @staff_member_required
 def product_edit(request, pk):
     product = get_object_or_404(
-        Product.objects.select_subclasses().prefetch_related('images',
-                                                             'variants'), pk=pk)
+        Product.objects.select_subclasses().prefetch_related('images', 'variants'), pk=pk)
     attributes = product.attributes.prefetch_related('values')
     images = product.images.all()
     variants = product.variants.select_subclasses()
     stock_items = Stock.objects.filter(variant__in=variants)
-
     form = forms.ProductForm(request.POST or None, instance=product)
     variants_delete_form = forms.VariantBulkDeleteForm()
     stock_delete_form = forms.StockBulkDeleteForm()
@@ -167,18 +165,14 @@ def product_image_delete(request, product_pk, img_pk):
 
 @staff_member_required
 def variant_edit(request, product_pk, variant_pk=None):
-    product = get_object_or_404(Product.objects.select_subclasses(),
-                                pk=product_pk)
+    product = get_object_or_404(Product.objects.select_subclasses(), pk=product_pk)
     form_initial = {}
     if variant_pk:
-        variant = get_object_or_404(product.variants.select_subclasses(),
-                                    pk=variant_pk)
+        variant = get_object_or_404(product.variants.select_subclasses(), pk=variant_pk)
     else:
         variant = ProductVariant(product=product)
-    form = forms.ProductVariantForm(request.POST or None, instance=variant,
-                                    initial=form_initial)
-    attribute_form = forms.VariantAttributeForm(request.POST or None,
-                                                instance=variant)
+    form = forms.ProductVariantForm(request.POST or None, instance=variant, initial=form_initial)
+    attribute_form = forms.VariantAttributeForm(request.POST or None, instance=variant)
     if all([form.is_valid(), attribute_form.is_valid()]):
         form.save()
         attribute_form.save()
@@ -190,8 +184,7 @@ def variant_edit(request, product_pk, variant_pk=None):
         success_url = request.POST['success_url']
         if is_safe_url(success_url, request.get_host()):
             return redirect(success_url)
-    ctx = {'attribute_form': attribute_form, 'form': form, 'product': product,
-           'variant': variant}
+    ctx = {'attribute_form': attribute_form, 'form': form, 'product': product, 'variant': variant}
     return TemplateResponse(request, 'dashboard/product/variant_form.html', ctx)
 
 

@@ -37,9 +37,7 @@ class StockForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    available_on_submit = forms.DateField(widget=forms.HiddenInput(),
-                                          input_formats=['%Y/%m/%d'],
-                                          required=False)
+    available_on_submit = forms.DateField(widget=forms.HiddenInput(), input_formats=['%Y/%m/%d'], required=False)
 
     class Meta:
         model = Product
@@ -47,12 +45,9 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['placeholder'] = pgettext_lazy(
-            'Product form labels', 'Give your awesome product a name')
-        self.fields['categories'].widget.attrs[
-            'data-placeholder'] = pgettext_lazy('Product form labels', 'Search')
-        self.fields['attributes'].widget.attrs[
-            'data-placeholder'] = pgettext_lazy('Product form labels', 'Search')
+        self.fields['categories'].widget.attrs['data-placeholder'] = pgettext_lazy('Product form labels', 'Category list')
+        self.fields['name'].widget.attrs['placeholder'] = pgettext_lazy('Product form labels', 'Name this product')
+        self.fields['attributes'].widget.attrs['data-placeholder'] = pgettext_lazy('Product form labels', 'Attributes list')
         if self.instance.available_on:
             self.fields['available_on'].widget.attrs[
                 'datavalue'] = self.instance.available_on.strftime('%Y/%m/%d')
@@ -72,10 +67,8 @@ class ProductVariantForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductVariantForm, self).__init__(*args, **kwargs)
-        self.fields['price_override'].widget.attrs[
-            'placeholder'] = self.instance.product.price.gross
-        # self.fields['weight_override'].widget.attrs[
-        #     'placeholder'] = self.instance.product.weight
+        self.fields['price_override'].widget.attrs['placeholder'] = self.instance.product.price.gross
+        # self.fields['weight_override'].widget.attrs['placeholder'] = self.instance.product.weight
 
 
 class VariantAttributeForm(forms.ModelForm):

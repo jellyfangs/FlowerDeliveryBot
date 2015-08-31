@@ -46,6 +46,11 @@ class DummyDelivery(BaseDelivery):
         return Price(total, currency=settings.DEFAULT_CURRENCY)
         return Price(total, currency=settings.DEFAULT_CURRENCY)
 
+def get_delivery_options_for_items(items, **kwargs):
+    if 'address' in kwargs:
+        yield DummyShipping()
+    else:
+        raise ValueError('Unknown delivery type')
 
 def get_shipping_options_for_items(items, **kwargs):
     if 'address' in kwargs:
