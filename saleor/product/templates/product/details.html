@@ -64,8 +64,24 @@
 
             <br>
 
-            {% if product.is_in_stock %}
-                {% block orderform %}
+            {% if product.requires_stocking %}
+                {% if product.is_in_stock %}
+                    {% block orderform %}
+                    <form role="form" class="product-form form-vertical" method="post" action=".">
+                        {% csrf_token %}
+                        {{ form|as_vertical_form }}
+                        <br>
+                        <div class="form-group">
+                            <button class="btn btn-lg btn-block btn-primary">
+                                {% trans "Add to cart" %}
+                            </button>
+                        </div>
+                    </form>
+                    {% endblock %}
+                {% else %}
+                    <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>
+                {% endif %}
+            {% else %}
                 <form role="form" class="product-form form-vertical" method="post" action=".">
                     {% csrf_token %}
                     {{ form|as_vertical_form }}
@@ -76,10 +92,18 @@
                         </button>
                     </div>
                 </form>
-                {% endblock %}
-            {% else %}
-                <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>
             {% endif %}
+
+            <br>
+
+            <div class="well">
+            <ul>
+                <li>Available on? {{ product.available_on }}</li>
+                <li>Delivery required? {{ product.is_delivery_required }}</li>
+                <li>Shipping required? {{ product.is_shipping_required }}</li>
+                <li>Stocking required? {{ product.is_stocking_requried }}</li>
+            </ul>
+            </div>
         </div>
 
         {% with images=product.images.all %}

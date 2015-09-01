@@ -1,5 +1,64 @@
+
+StoreApp
+Add product to cart
+Save cart
+Ask for billing address, delivery address, and payment
+Save order
+
+Order generates stock requirements
+Every three days print out stock ordering sheet
+Every day print out production sheet
+
+Every day drivers are dispatched at 10am for deliveries until 7pm
+3 deliveries per hour means 27 orders a day
+
+DispatchApp
+- track inventory of all drivers 
+- send order to closest driver by time/route
+
+DriverApp
+- see orders list
+- confirm/cancel orders
+
+
+
+TODOs
 - augment products with shipping or delivery options
 - delivery does not req weight attributes
 - drivers have allocations for slots for delivery
-- augment stock checks to generate jobs list if not enough stock availabl 
+
+
+
+Delivery Features
+
+- Delivery Date/Time Request - On the cart page, customers can specify a date and a time when they would like their order delivered. This information is then added to the order notes.
+- Store Hours - Specify available delivery days and times for your store. For example, you could specify that delivery is available Monday to Friday from 8am to 4pm, Saturday from 8am to 12pm and delivery is not available on Sunday.
+- Blackout Specific Days - You can set days where delivery is not available, for example Christmas Day, or a range of dates, for example 30th Dec 2012 to 3rd Jan 2013.
+- Delivery Offset - Specify the minimum amount of time between ordering and delivery. For example, specify a minimum of two hours between ordering and delivery or specify next day delivery.
+- Set Delivery Rate Limits - Limit the number of deliveries in a given time period. For example, a you could limit the number of deliveries to 2 per hour. When the customer is choosing their delivery time, time periods that have used up their delivery allocation would be unavailable.
+- Manage Orders - View all pending and past deliveries at a glance. This allows you to keep track of what deliveries need to take place and to mark them off when they are completed. View deliveries as a list or on a calendar.
+- Export Deliveries - Export deliveries for for each day. This makes creating delivery run sheets a breeze! Deliveries will be exported in CSV format.
+- Products - Mark individual products as available/not available for local delivery.
+- Customize - Add custom text to the local delivery section of the cart page. For example, you could specify that your store delivers within a 5 mile radius of Woolloomooloo, NSW.
+
+
+Stocking Features
+
+- Check if stocking is required
+- If no stock then generate jobs list to produce stock
+- Manage stock inventory if set to do so
+
+
+Driver Features
+
+- manage drivers
+
+
+Text orders
+- Send menu
+- Pick item
+- Set place and time
+- Send payment link
+
+
 
