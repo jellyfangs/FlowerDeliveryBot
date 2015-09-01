@@ -145,6 +145,9 @@ class Product(models.Model, ItemRange):
 
     admin_get_price_max.short_description = pgettext_lazy('Product admin page', 'Maximum price')
 
+    def requires_stocking(self):
+        return any(variant.is_stocking_required for variant in self)
+
     def is_in_stock(self):
         return any(variant.is_in_stock() for variant in self)
 
@@ -173,6 +176,7 @@ class ProductVariant(models.Model, Item):
     attributes = JSONField(pgettext_lazy('Variant field', 'attributes'), default={})
     is_delivery_required = models.BooleanField(blank=True, default=False)
     is_shipping_required = models.BooleanField(blank=True, default=False)
+    is_stocking_required = models.BooleanField(blank=True, default=False)
 
     objects = InheritanceManager()
 
@@ -193,6 +197,9 @@ class ProductVariant(models.Model, Item):
     def get_stock_quantity(self):
         return sum([stock.quantity for stock in self.stock.all()])
 
+    def is_in_stock(self):
+        return any([stock_item.quantity > 0 for stock_item in self.stock.all()])
+
     def get_price_per_item(self, discounts=None, **kwargs):
         price = self.price_override or self.product.price
         if discounts:
@@ -202,29 +209,11 @@ class ProductVariant(models.Model, Item):
                 price += modifier
         return price
 
-    def get_absolute_url(self):
-        slug = self.product.get_slug()
-        product_id = self.product.id
-        return reverse('product:details',
-                       kwargs={'slug': slug, 'product_id': product_id})
-
-    def as_data(self):
-        return {
-            'product_name': str(self),
-            'product_id': self.product.pk,
-            'variant_id': self.pk,
-            'unit_price': str(self.get_price_per_item().gross)}
-
-    #TODOS change these into product settings
     # def is_delivery_required(self):
     #     return True
 
     # def is_shipping_required(self):
     #     return True
-
-    #TODOS reverse stock to generate jobs
-    def is_in_stock(self):
-        return any([stock_item.quantity > 0 for stock_item in self.stock.all()])
 
     def get_attribute(self, pk):
         return self.attributes.get(str(pk))
@@ -240,6 +229,18 @@ class ProductVariant(models.Model, Item):
 
     def display_product(self, attributes=None):
         return '%s (%s)' % (smart_text(self.product), self.display_variant(attributes=attributes))
+
+    def as_data(self):
+        return {
+            'product_name': str(self),
+            'product_id': self.product.pk,
+            'variant_id': self.pk,
+            'unit_price': str(self.get_price_per_item().gross)}
+
+    def get_absolute_url(self):
+        slug = self.product.get_slug()
+        product_id = self.product.id
+        return reverse('product:details', kwargs={'slug': slug, 'product_id': product_id})
 
 
 @python_2_unicode_compatible

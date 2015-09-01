@@ -21,6 +21,7 @@ class CartLine(cart.CartLine):
     def __init__(self, product, quantity, data=None, discounts=None):
         super(CartLine, self).__init__(product, quantity, data=data)
         self.discounts = discounts
+        self.quantity = quantity
 
     def get_price_per_item(self, **kwargs):
         kwargs.setdefault('discounts', self.discounts)
@@ -67,8 +68,7 @@ class Cart(cart.Cart):
             else:
                 variant = product.variants.get_subclass(pk=item.data['variant_id'])
             quantity = item.quantity
-            cart.add(variant, quantity=quantity, check_quantity=False,
-                     skip_session_cart=True)
+            cart.add(variant, quantity=quantity, check_quantity=False, skip_session_cart=True)
         return cart
 
     def get_data_for_product(self, variant):
@@ -81,8 +81,8 @@ class Cart(cart.Cart):
             'unit_price_net': str(variant_price.net)}
         return variant_data
 
-    def add(self, product, quantity=1, data=None, replace=False,
-            check_quantity=True, skip_session_cart=False):
+    #TODOs move check_quantity to global settings
+    def add(self, product, quantity=1, data=None, replace=False, check_quantity=False, skip_session_cart=False):
         super(Cart, self).add(product, quantity, data, replace, check_quantity)
         data = self.get_data_for_product(product)
         if not skip_session_cart:
