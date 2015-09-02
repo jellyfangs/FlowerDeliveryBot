@@ -8,12 +8,21 @@
     <button type="submit" class="btn {% if entry.is_selected %}btn-primary{% else %}btn-default{% endif %} btn-lg col-sm-12">{% trans "Ship to this address" %}</button>
 {% endblock %}
 
+{% block additional_message %}
+    {% if not user.is_authenticated %}
+        <p class="alert alert-info">
+            {% trans "Already have an account?" %}
+            <a href="{% url "registration:login" %}?next={% url "checkout:details" step="billing-address" %}">{% trans "Log in" %}</a>
+        </p>
+    {% endif %}
+{% endblock %}
+
 {% block extra_address_fields %}
     {{ delivery_form|as_vertical_form }}
 {% endblock %}
 
 {% block fields %}
-    <div id="form-full-toggle" data-label="{% trans "Shipping address same as billing" %}"></div>
+<!--     <div id="form-full-toggle" data-label="{% trans "Shipping address same as billing" %}"></div> -->
     <div class="form-full">
         {{ step.forms.address.phone|as_vertical_form }}
         {{ step.forms.address.first_name|as_vertical_form }}
@@ -23,6 +32,8 @@
         {{ step.forms.address.street_address_2|as_vertical_form }}
         {{ step.forms.address.city|as_vertical_form }}
         {{ step.forms.address.postal_code|as_vertical_form }}
+        {# step.forms.address.country|as_vertical_form #}
+        {# step.forms.address.country_area|as_vertical_form #}
     </div>
 
     {{ delivery_form|as_horizontal_form }}
@@ -30,6 +41,6 @@
 
 {% block form_submit %}
     <button type="submit" class="btn btn-primary">
-        {% trans "Ship to this address" %}
+        {% trans "Deliver to this address" %}
     </button>
 {% endblock %}

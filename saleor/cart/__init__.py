@@ -28,7 +28,12 @@ class CartLine(cart.CartLine):
         return super(CartLine, self).get_price_per_item(**kwargs)
 
     def is_shipping_required(self):
+        print 'Hello cart line wants to know if shipping is required -> '
         return self.product.is_shipping_required
+
+    def is_delivery_required(self):
+        print 'Hello cart line wants to know if delivery is required -> '
+        return self.product.is_delivery_required
 
 
 @python_2_unicode_compatible
@@ -97,10 +102,18 @@ class Cart(cart.Cart):
         return CartLine(product, quantity, data=data, discounts=self.discounts)
 
     def is_shipping_required(self):
-        return any(line.is_shipping_required for line in self)
+        shipping = False
+        for line in self:
+            if line.is_shipping_required(): shipping = True
+        return shipping
+        # return any(line.is_shipping_required for line in self)
 
     def is_delivery_required(self):
-        return any(line.is_delivery_required for line in self)
+        delivery = False
+        for line in self:
+            if line.is_delivery_required(): delivery = True
+        return delivery
+        # return any(line.is_delivery_required for line in self)
 
     def partition(self):
         return partition(
