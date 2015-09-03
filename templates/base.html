@@ -91,6 +91,7 @@
             </header>
         {% endblock %}
         {% if messages %}
+        {% block msg_block %}
         <div class="container">
             {% for message in messages %}
             <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
@@ -99,6 +100,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endblock %}
         {% endif %}
         <div class="container">
             {% block outercontent %}

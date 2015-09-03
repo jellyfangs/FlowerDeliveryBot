@@ -10,6 +10,19 @@
 
 {% block title %}{{ product }} — {{ block.super }}{% endblock %}
 
+{% block msg_block %}
+<div class="container">
+    {% for message in messages %}
+    <a href="{% url 'cart:index' %}">
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ message }}
+    </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock msg_block %}
+
 {% block breadcrumb %}
     {{ block.super }}
     {% with product.get_first_category as category %}

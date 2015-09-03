@@ -24,7 +24,7 @@ def product_details(request, slug, product_id):
                       data=request.POST or None)
     if form.is_valid():
         if form.cleaned_data['quantity']:
-            msg = _('Added %(product)s to your cart.') % {
+            msg = _('Added %(product)s, we can review your cart.') % {
                 'product': product}
             messages.success(request, msg)
         form.save()
