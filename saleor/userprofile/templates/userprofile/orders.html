@@ -11,7 +11,8 @@
 
 {% block content %}
     <div class="page-header">
-      <h1><i class="glyphicon glyphicon-user"></i> {{ user }} <small>Your Orders</small></h1>
+      <h1><!-- Purchase Order icon by Icons8 -->
+<img class="icon icons8-Purchase-Order" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAA2UlEQVRoQ+2aSw6AIAxE5f6H1o0mEAkBp6Ooz51ix3Ze+SxMy/laK89mfJTypIqbfeBzhdSKnIHMYXQ3EQoxY4OI2eBheYgMW2YOgIjZ4GH5UCLu3b+1h1HIMHtzQCgRc65NeQp50v3atyECEZMDtJbJ2MuyELlsnSkQIq1N6RjLT6sRJ+PHTr+vLcTU/l2yzJEum258CSKsWkK73bb8CjnKocwR2cJgAYiwagktxaqVm1edTIK70aFM9mhHVT2IqA5Gx0Mk2lFV779EVOfc8d1/B7kTUfWLQjZfZG4z2w+qTgAAAABJRU5ErkJggg==" width="50" height="50"> Orders</h1>
     </div>
 
     <ul class="nav nav-pills">
@@ -20,9 +21,8 @@
       <li role="presentation"><a href="{% url 'registration:request_email_change' %}">{% trans 'Change your email' %}</a></li>
       <li role="presentation"><a href="{% url 'registration:change_password' %}">{% trans 'Change your password' %}</a></li>
         {% if user.is_staff %}
-        <li role="presentation"><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li> 
+        <li role="presentation" class="pull-right"><a href="{% url "dashboard:index" %}">{% trans "Admin" %}</a></li> 
         {% endif %}
-      <li role="presentation" class="pull-right"><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
     </ul>
 
     <br>

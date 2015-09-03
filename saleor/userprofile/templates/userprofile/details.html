@@ -10,7 +10,8 @@
 
 {% block content %}
     <div class="page-header">
-      <h1><i class="glyphicon glyphicon-user"></i> {{ user }} <small>Your Addresses</small></h1>
+      <h1><!-- Shop icon by Icons8 -->
+<img class="icon icons8-Shop" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAB2klEQVRoQ+2Y4TUEMRSFv60AFaADKkAFSkAHVIAKUAE60AEqoANUQAec62zO2YlMJtmZZLIj82dnJ5Pk3XfffS9vZkzkmk0EBxVIaUxWRlaBke/SjGyxpxFNrtCaHJBS9WMcHcxIBZJYY9GMJLan9/Le0NoC3npvkWeBDeDLbGXrYB94BJ4B3S9eTkrnL+QcewL2gANA97+XDeQCOAdugNNCgdwBR8AlIHudQMxLZ8B1oUDk4CvgHjhuA+KkbYTw0ZZt4eoMfzu0JHQJfhd4LZSRHeAFeAe22xjJKVqf16PHbEYmA0R5eQ1o5OjCNLIOfNrJymbkATgETgBlsBLriDLVrV3rbCDmJQldKdhkMeVrUyD1TP9VNFWYco5J6CrYYqXh7Jh+5GNOz6bjBJJ77E8x9wGRcTJavwozUyBVkMTcWGPGkbUfcUTUKI+i+5FJdohDfZBYdE7Mmq55S2kkZlNfvBUDZNlwc8W17zhknBE8z5d+O+mMkHqwQQGniV5iD/GeD1cF4uhkKyNdTU6IVGpo1dBq+XpRs5anTQ5xTrC2/m1BDMlQsWct37EnGSMrD6QvANf8UTRSgXg8kI2RFCwMuWZwhzjkpinW6gSSYtPkay7buiY3LHaDH3Yo6zPn1lqIAAAAAElFTkSuQmCC" width="50" height="50"> Addresses</h1>
     </div>
 
     <ul class="nav nav-pills">
@@ -19,9 +20,8 @@
       <li role="presentation"><a href="{% url 'registration:request_email_change' %}">{% trans 'Change your email' %}</a></li>
       <li role="presentation"><a href="{% url 'registration:change_password' %}">{% trans 'Change your password' %}</a></li>
         {% if user.is_staff %}
-        <li role="presentation"><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li> 
+        <li role="presentation" class="pull-right"><a href="{% url "dashboard:index" %}">{% trans "Admin" %}</a></li> 
         {% endif %}
-      <li role="presentation" class="pull-right"><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
     </ul>
 
     <h3>

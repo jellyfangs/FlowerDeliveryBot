@@ -12,7 +12,8 @@
 {% block content %}
 {% if user.is_authenticated %}
     <div class="page-header">
-      <h1><i class="glyphicon glyphicon-user"></i> {{ user }} <small>Change email</small></h1>
+      <h1><!-- My Topic icon by Icons8 -->
+<img class="icon icons8-My-Topic" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAE2UlEQVRoQ82aj5FMQRDG+yJwIuAi4CJABIgAEXARIAInAi4CLgJEwEWACBAB9Xs136ve2XkzPe/N1umqrVt2drq//vrfzNsjGyd3zeyOmfGX1+308hp+m9k3M9Pfz2b2ZYQJRxs3uW9mT8yMvxi+Vj6aGa/LBLJ7n7VAMP5VZvxPM8PDeNx73Rt17NiCNRwAixKYem9mb83sRw+aXiCPzOyNA4DxeBLlGL9GAMe+T83sXtoAQOcJEO+bEgWCsndJIZsC4EUC0VTSsQCW2BfGEVh5lpiubhMBAv0fzAwwf5IiGDikAAhGxBBh/LqmsAUEumECIRH5d4jqQShhh1BGCGHYKeqvAfEg8AZeuQ6BHYrIjZSHD0pgloB4EHjh0KHUcpAHAzOP8y+UgPClr2nh/wBCNnswlGfCbpYcCAkNCJrb3uKW29zn7EPloaxSLIhrwuOstz9kOr2TCTH2nCQHQqV4bmZXqXF12D4vxQlUOZSWhNAg59b2HRUAnHOifPFAMOB70ny6QdGnxAIzFEoxGIYoFjgJ2TFihbdggtI8FyEPhIQmHC5SmV2x/8QCoUnD5H2pVMoIwowIWCOEKw6bHSIgng3o6ppznCXkBGFFz+F9SWDmpffmGiSprzxMeXcuIIq7LWxgj/apFYpRQOQ0nH4iIIQDoUB9JhnXiignP3hfEhWUEU2W0KJRngKERPyVNLZGlhZAhSgKbi4sltN2ymdr44XPlddnGB7xYlSP6K4lO6FwS7Ed3XhhnSaQC4CMyg90+bgtjd++x4yYGmYSADIq+eQ0+ganvlLCS1eNsV6S/vKFQwBRLyGEaKy+l6hZbi0qHuzBgKBErPh+IjY4nBFio841BwWiXPFleHQIi5U9IFum3Tyua0BG6lEYX40uv4QMg6HOCr7pqcIAmvrPFDGP4b0Zntar/F76hlhrYi09GMn85Lt5rWppPwoCIQeoNTJPCerkSs413ZbLATFAIjPiYNzS4AlrrMebjBdI9WKhgpBjB/tNIwoiZL1Do74HAN7z6qlGgOE7ACLMcGRUlB/oPs7H+J4Djx/91zApg9fuozlrCmE/JEIv8310KlVlinowsi6qe+/85IGIKlihI7cOV+oLEQOja2oHMr8HhzccOadCPraLrt54jRo6Yp0igdzA+ZPDS9dBfEDybTlTjzC4tAchxXmGM9SOfaWDlG9cI0btUaAwnqETFvZCsHVlSr6A/LqvTD0I7tx06Tc7qXa0Vb6weOTY3cuQP4wVQZRyJFfSW5J7jWyt989mFkFEgIiVaH1vGRb9nFBidtPo03w207o1GXnjEQEBAE3PekJGv2reSNaA+O7J1U7PDBUx2q+hEgGAHgEAhEMZs1irMU+La0DUuaPdlv0wgosHLhdqBnABjaPIgfwZPQDQ3XVWWQLiG090IPSJ6b0tg0q/hNA6PeYmhEIM5JQvAVFuRNjIE5Pqwv9xCbckrMFgQOpHBr3huLO+BISnuMRm5LYj/wVEaazRqRHDV3k7gtADwYuc9gQCA5aeKuUA/EOdiN7ha/zBSo/LYKIEgsrCeQWg+gENsU1iXvcIM1UtSh7hBCOUWJoQIaDk1I9fVBbxJjFOYl47AFELkOmCKyC6WMD4rtIY2HvzEjECC3hetxryOsyQJ6oumxUeaoN/fwpTbvr4c2AAAAAASUVORK5CYII=" width="50" height="50"> Change email</h1>
     </div>
 
     <ul class="nav nav-pills">
@@ -21,9 +22,8 @@
       <li role="presentation" class="active"><a href="{% url 'registration:request_email_change' %}">{% trans 'Change your email' %}</a></li>
       <li role="presentation"><a href="{% url 'registration:change_password' %}">{% trans 'Change your password' %}</a></li>
         {% if user.is_staff %}
-        <li role="presentation"><a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a></li> 
+        <li role="presentation" class="pull-right"><a href="{% url "dashboard:index" %}">{% trans "Admin" %}</a></li> 
         {% endif %}
-      <li role="presentation" class="pull-right"><a href="{% url "registration:logout" %}">{% trans "Log out" %}</a></li>
     </ul>
 
     <br>

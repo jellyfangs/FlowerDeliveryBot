@@ -9,7 +9,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="{% block meta_description %}{% endblock %}">
-        <meta name="author" content="{% trans "Mirumee Software" %}">
+        <meta name="author" content="{% trans "" %}">
         {% endblock meta %}
 
         <script src="{% static "js/storefront_head.js" %}"></script>
@@ -34,7 +34,8 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/">GALLANT</a>
+                        <a class="navbar-brand" href="/"><!-- Close up Mode icon by Icons8 -->
+<img class="icon icons8-Close-up-Mode" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAGJ0lEQVRoQ+2Zz28TVxDHv7P+Ef8isZMgmh9URK2EJQo4KJECRcJpe6hEpdr8AyWnqqeGHqtENRLnNjn21HCoeswihaqHthgJkUiJVKfqISBVpeKXEEgJxIkde71TvXUc1vbuenchQBEr5RC/2Zn5vHnzZt5bwmvy0GvCgTcgr1ok30TEbkTyHwyfFbKR3xdn7L7jRm5XI6JBEP2gOcY8tpswzwxyZ2T4bP9CdbavHzw4BebsiZs35fWPhpLE0hX97DKpo3t+XcrOx+NnmfnoiRs3zolxvQ430RDvuAZZTSSiGwHvLAiJ/vml2PV4XMB8JpR2Beh0b2fkRyKK1oEwr91+lP9ircQ/aUECZt5fWRm7MzK0RoQrffNL6RcOcm9keIap6viD9cL3RUX5vObEO90hJdzm9Ro5tbGlKH8/2twZi/h9F7vCAU0PGDN9C4tjbmBcReTe8aFxBn1XM/ikWMJqYUv7NxbyYX8saOnL7dUCVjfLVflgG9oD/h15Ap/rnV+acgrjGOT+SOKASr5/9IaUioq7Tza0n+L7IvB7JUs/SoqKlQd5TaavIwyvVC8vcXmgZyF3ywmMYxD9ktIbepjfRJtPahmN2jsiKiUF6A4HmvwlxsXehUVt27b7OAapJiZ1NBoolhWIFdIR9Nmy/bhQRrEEBHzNqcTgNbGB2FK0LeQI5P7IUFIlqttS9cY6Qo7U4fEmm/oqMY/2LCxl7cI4snx3ZCgDom+MlEtg7AlZ50bje082VbBJBXCa9M8NxCMxIgFnIPmiiopq4gLz+b6FpcwLj8j/CsQqR1yBFBgVkzTZ1RwRbclm0LdqFu7nmeyhQjkWy+XWdmVpCaV3jw/JAH1qZGBPAJAke2mnqoz1opmbfKlvfillF0LI2bOq02i1vIJ+blnVa6pEdS+UjM2zgsH+xcXcroII5XeOD08R8GWjIb8HCLbZm5vCFqNUaXaVgen++cVxJxCuIiJeqrbwviwRjuoNkqglQQKRNQwzY73ATTWEGcvhYjnpJDdq9u1Nn8H0bJ9HZCI6pR9u8wIBv7XaYomxpdQrZear4aKScgNhGpHDk4NZaBNGOVLVXMmHqysZ4260sdqLqEQCZJr0IsnzxYZoWBS/j2dTBzxMp0CcICAhvJo7Iycb59Zw6gQIoX6mwZxjomzZo043QonWnuHL1A5aHgJEU9u4xMSS2ihip3aILpdQzjS27Jrz1RxMas7rH8bVZwPRKWOGzFCn/7qQq2vqNCDyphhISsQfBv1SxCuoACgVRqGk5lWm3wjIEityI8Ansykx0wLAfOt1BDIxOENE1eOnxSOAyl71nNmyG/n2ZF3dXvjqmuEKEBHwAuK2pWnJGJifnkvLTbuaoeIjE8cyIBh2uYZcrI7/eSE33ThmB+T0bGqcgJ1jc6vJA3B+Li03NZOGIO9NJJIS1V/ltDIgouPxqmO5zNO2wgokNZuKKtUoOKrgAEbn0nLTOcUQJJ5JHPBXpLpzeSsQbZw5J3l5tAZjBiIgysCVpkS2YUQBBn5Jy03nedMN//DkYI5AdQXPhp06GCOQZ4EAY3nujFy/i207ZQpyZOLYFKi5DXECE2iP1HXKbw10x9xGYtuuYaKbFkQxcOjrRMLjkf6w5biBkLhFDMdCdTchXQPdF2n7NtKNXhUY/DktGzaTlr2EYWF04EEoFtqR9of8aN/X7uDtBlGT+lGTsgRxs3vpzddASCLE9scgNVzEOaQy3K1sgQihw5ODMpkcpFo5UgMJd4URbLe+Rm1ReC9dPiNbbtMtu99EJhFVFekWCE2XcnZAJK+Ezv2drURNx5nxr4+QkNOy5bG3JchO4ktS1imMiIj2F32aK06ImPGYCUmzBNfrsgXiFkZAdL7dCcnj7L6rWlvtQ1huv0YzJyq+r0IiZ2wVymhf1N1OxVhWCCmjCm4WUdsR0Ss4MnlsHAzRWFrmzd539zpKchEFEDKX0/Lufx+pAYlNoFIRDR+Nm0Wo91AvvOLs2+phLKuEKT8gt0rq5xqRRmUalCJOc1KCiUUvpH077In3nNTL+oP+a9r6B8Q3wxwBOQ+Qdeu8q2RvNakve9xVjrxsp43svwF51aLy2kTkP+wAaVGSv6FkAAAAAElFTkSuQmCC" width="21" height="21"></a>
                     </div>
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav">
@@ -47,7 +48,8 @@
                             {% endfor %}
                             {% if request.cart %}
                             <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {# trans "Shopping cart" #} {% if request.cart %}<span class="label label-danger">{{ request.cart.count }}</span>{% endif %}</a>
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><!-- Paid icon by Icons8 -->
+<img class="icon icons8-Paid" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACzElEQVRoQ+2Y/5UMQRDHvxcBIuAiQAZEgAiOCBABIkAEiOCIABEgAkTgLgLe517Xvr6Z6Z3qmaq9Z9/2f3fb3VOfrt91pD1ZR3vCoWyQO5JOJf2S9EjSWdbDZYIA8VnS9SL8d0n3s2CyQGqIH5JuSbomKQ0mA2QIca+AfMmEiQbBjH4Wc0ITQJhfAJgGEwkCBD6BwEMI8/E0mCgQD4TB4C8fJd2O9JkIkB4Ig+EMZhYGsxZkCUQKzBqQNRDhMEtBIiBCYZaAREKEwfSCZECEwADyWNLrqibKquuy7iXhPgfkz38MYY9zBsjf8levmWW9cO+9F/IfQHqfLXH//mkEr6fpYb2X9CTx9SKvpoV+WC48t/D7poK5kdWONiisFe7p56mg6XtY55Ke1ZGK0vpB0Qia2cWyBMu3evp5ct87SZ9MKzXI6MdkkjVVwujRaxBTFyrGvDLXGgjOksRZGzcYJkGmHDQ7zKCgzlhrIJDHLOdrmQlcyDgEeSnphaQP5YAXxOuwayEssp5QX0kiSE2CMBz4ViaDx04Kr8NGQCCS1YbIxwRzEoR/8uNNSXfLcGCOx9N/R0GQN8gfTGl49M2aKhQJvajulSRMzbO2wURB1GY1km0KxKhxfLTiXVMwnJ2bdXnvZx9JkOg6spZW6W6l/SU7dHxxCMORbQM7x5WbLea/vwvMpbMtkDVZvobhY62pYw8Ee4lQTyW9pSQZHm6BrM3yBsP36vlvr/D1fjOryRzXAqmLsqWdoze3eOBMHgpEu9dlWmzaRZb3QLAHU2JA0kzU21579rBXioB9JGmcvVk6bQNZkuUDZB5dUZt5s1eas//eLJ8B4go8cyAW8gjHqHXXC8emJCHy0YI3G745ENSK01tPv2sQ+x7RClma7fAciOUBNEOfchWLvoPAw4M2lwfkKoTv/uYBpPvJkg8cNJL8wN3XHzTS/WTJB/4BjObWzv+3Qz0AAAAASUVORK5CYII=" width="18" height="18"> {# trans "Shopping cart" #} {% if request.cart %}<span class="label label-danger">{{ request.cart.count }}</span>{% endif %}</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{% url "checkout:index" %}">{% trans "Proceed to checkout" %}</a></li>
                                     <li class="divider"></li>
@@ -68,7 +70,7 @@
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             {% if user.is_authenticated %}
-                            <p class="navbar-text navbar-right">Signed in as <a href="{% url "profile:details" %}" class="navbar-link">{{ user }}</a></p>
+                            <p class="navbar-text navbar-right">Signed in as <a href="{% url "profile:details" %}">{{ user }}</a> or <a class="navbar-link" href="{% url "registration:logout" %}">{% trans "log out" %}</a></p>
 <!--                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="."><i class="glyphicon glyphicon-user"></i> {{ user }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
