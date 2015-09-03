@@ -75,9 +75,15 @@ class BillingAddressStep(BaseAddressStep):
     template = 'checkout/billing.html'
     title = _('Billing Address')
 
-    def __init__(self, request, storage):
+    def __init__(self, request, storage, cart, default_address=None):
+        self.cart = cart
         address_data = storage.get('address', {})
-        address = Address(**address_data)
+        if not address_data and default_address:
+            address = default_address
+        else:
+            address = Address(**address_data)
+        super(BillingAddressStep, self).__init__(request, storage, address)
+
         skip = False
         if not address_data and request.user.is_authenticated():
             if request.user.default_billing_address:
@@ -88,11 +94,9 @@ class BillingAddressStep(BaseAddressStep):
                 skip = True
         super(BillingAddressStep, self).__init__(request, storage, address)
         if not request.user.is_authenticated():
-            self.anonymous_user_email = self.storage.get(
-                'anonymous_user_email')
+            self.anonymous_user_email = self.storage.get( 'anonymous_user_email')
             initial = {'email': self.anonymous_user_email}
-            self.forms['anonymous'] = AnonymousEmailForm(request.POST or None,
-                                                         initial=initial)
+            self.forms['anonymous'] = AnonymousEmailForm(request.POST or None, initial=initial)
         else:
             self.anonymous_user_email = ''
         if skip:
@@ -135,9 +139,12 @@ class DeliveryStep(BaseAddressStep):
     def __init__(self, request, storage, cart, default_address=None):
         self.cart = cart
         address_data = storage.get('address', {})
-        if not address_data and default_address: address = default_address
-        else: address = Address(**address_data)
+        if not address_data and default_address: 
+            address = default_address
+        else: 
+            address = Address(**address_data)
         super(DeliveryStep, self).__init__(request, storage, address)
+
         delivery_choices = list((m.name, m) for m in get_delivery_options_for_items(self.cart, address=address))
         selected_method_name = storage.get('delivery_method')
         selected_method = None

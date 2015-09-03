@@ -45,6 +45,7 @@ class Checkout(ProcessManager):
 
     def generate_steps(self, cart):
         self.cart = cart
+
         if self.is_shipping_required():
             self.shipping = ShippingStep(
                 self.request, self.get_storage('shipping'),
@@ -52,6 +53,7 @@ class Checkout(ProcessManager):
             self.steps.append(self.shipping)
         else:
             self.shipping = None
+
         if self.is_delivery_required():
             self.delivery = DeliveryStep(
                 self.request, self.get_storage('delivery'),
@@ -59,9 +61,14 @@ class Checkout(ProcessManager):
             self.steps.append(self.delivery)
         else:
             self.delivery = None
-        self.billing = BillingAddressStep(self.request, self.get_storage('billing'))
+
+        self.billing = BillingAddressStep(
+                self.request, self.get_storage('billing'),
+                self.cart, default_address=self.delivery_address if self.delivery else self.shipping_address)
         self.steps.append(self.billing)
+
         summary_step = SummaryStep(self.request, self.get_storage('summary'), checkout=self)
+
         self.steps.append(summary_step)
 
     @property
@@ -147,11 +154,9 @@ class Checkout(ProcessManager):
         self.cart.clear()
 
     def is_shipping_required(self):
-        print 'Hello checkout wants to know if shipping required -> '
         return self.cart.is_shipping_required()
 
     def is_delivery_required(self):
-        print 'Hello checkout wants to know if delivery required -> '
         return self.cart.is_delivery_required()
 
     def get_deliveries(self, **kwargs):
