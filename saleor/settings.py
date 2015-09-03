@@ -26,22 +26,11 @@ SQLITE_DB_URL = 'sqlite:///' + os.path.join(PROJECT_ROOT, 'dev.sqlite')
 
 DATABASES = {'default': dj_database_url.config(default=SQLITE_DB_URL)}
 
+CANONICAL_HOSTNAME = os.environ.get('CANONICAL_HOSTNAME', 'localhost:8000')
 
-TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-us'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split()
 
-EMAIL_BACKEND = ('django.core.mail.backends.%s.EmailBackend' %
-                 os.environ.get('EMAIL_BACKEND_MODULE', 'console'))
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_USE_TLS = ast.literal_eval(os.environ.get('EMAIL_USE_TLS', 'False'))
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
@@ -192,26 +181,45 @@ AUTHENTICATION_BACKENDS = (
 
 AUTH_USER_MODEL = 'userprofile.User'
 
-CANONICAL_HOSTNAME = os.environ.get('CANONICAL_HOSTNAME', 'localhost:8000')
 
-LOGIN_URL = '/account/login'
 
-WARN_ABOUT_INVALID_HTML5_OUTPUT = False
+TIME_ZONE = 'America/Chicago'
+LANGUAGE_CODE = 'en-us'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
 DEFAULT_CURRENCY = 'USD'
 DEFAULT_WEIGHT = 'lb'
 
-ACCOUNT_ACTIVATION_DAYS = 3
 
+LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = 'home'
+
+ACCOUNT_ACTIVATION_DAYS = 3
 
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 
-GOOGLE_ANALYTICS_TRACKING_ID = os.environ.get('GOOGLE_ANALYTICS_TRACKING_ID')
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+GOOGLE_ANALYTICS_TRACKING_ID = os.environ.get('GOOGLE_ANALYTICS_TRACKING_ID')
 
+
+#### EMAIL SETTINGS ####
+
+EMAIL_BACKEND = ('django.core.mail.backends.%s.EmailBackend' % os.environ.get('EMAIL_BACKEND_MODULE', 'console'))
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = ast.literal_eval(os.environ.get('EMAIL_USE_TLS', 'False'))
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+
+########################
+
+
+#### PAYMENT SETTINGS ####
 PAYMENT_BASE_URL = 'http://%s/' % CANONICAL_HOSTNAME
 
 PAYMENT_MODEL = 'order.Payment'
@@ -228,6 +236,11 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 CHECKOUT_PAYMENT_CHOICES = [
     ('default', 'Dummy provider')
 ]
+##########################
+
+
+
+WARN_ABOUT_INVALID_HTML5_OUTPUT = False
 
 TEMPLATE_STRING_IF_INVALID = '<< MISSING VARIABLE >>'
 
@@ -235,15 +248,13 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 LOW_STOCK_THRESHOLD = 10
 
-TEST_RUNNER = ''
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split()
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Amazon S3 configuration
+#### Amazon S3 configuration ####
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STATIC_BUCKET_NAME = os.environ.get('AWS_STATIC_BUCKET_NAME')
@@ -258,5 +269,8 @@ if AWS_STATIC_BUCKET_NAME:
 if AWS_MEDIA_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'offsite_storage.storages.S3MediaStorage'
     THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
+##################################
 
-MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+TEST_RUNNER = ''
