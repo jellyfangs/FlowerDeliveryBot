@@ -28,11 +28,9 @@ class CartLine(cart.CartLine):
         return super(CartLine, self).get_price_per_item(**kwargs)
 
     def is_shipping_required(self):
-        print 'Hello cart line wants to know if shipping is required -> '
         return self.product.is_shipping_required
 
     def is_delivery_required(self):
-        print 'Hello cart line wants to know if delivery is required -> '
         return self.product.is_delivery_required
 
 

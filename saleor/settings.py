@@ -225,7 +225,10 @@ PAYMENT_BASE_URL = 'http://%s/' % CANONICAL_HOSTNAME
 PAYMENT_MODEL = 'order.Payment'
 
 PAYMENT_VARIANTS = {
-    'default': ('payments.dummy.DummyProvider', {})
+    # 'default': ('payments.dummy.DummyProvider', {}),
+    'stripe': ('payments.stripe.StripeProvider', {
+        'secret_key': 'sk_test_2Y7dSMVDtJqWYYFuhwj4UAP6',
+        'public_key': 'pk_test_sjMB2YGotogd9ywvEjwO27Xk'}),
 }
 
 PAYMENT_HOST = os.environ.get('PAYMENT_HOST', 'localhost:8000')
@@ -234,7 +237,8 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 CHECKOUT_PAYMENT_CHOICES = [
-    ('default', 'Dummy provider')
+    # ('default', 'Dummy provider'),
+    ('stripe', 'Stripe'),
 ]
 ##########################
 

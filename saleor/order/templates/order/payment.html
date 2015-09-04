@@ -19,7 +19,20 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8">
+        {% if order.user == user %}
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% trans "Billing address" %}
+                </div>
+                <div class="panel-body">
+                    <address>{% include "userprofile/snippets/address-details.html" with address=order.billing_address %}</address>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="col-sm-6">
             {% if order.user == user or not order.is_fully_paid %}
                 {% if not order.is_fully_paid %}
                     <div class="panel panel-info">
@@ -67,22 +80,25 @@
 
     <div class="row">
         {% if order.user == user %}
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        {% trans "Billing address" %}
-                    </div>
-                    <div class="panel-body">
-                        <address>{% include "userprofile/snippets/address-details.html" with address=order.billing_address %}</address>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-sm-6">
                 {% if order.is_shipping_required %}
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             {% trans "Shipping address" %}
+                        </div>
+                        <div class="panel-body">
+                            <address>{% include "userprofile/snippets/address-details.html" with address=order.shipping_address %}</address>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-sm-6">
+                {% if order.is_delivery_required %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {% trans "Delivery address" %}
                         </div>
                         <div class="panel-body">
                             <address>{% include "userprofile/snippets/address-details.html" with address=order.shipping_address %}</address>
