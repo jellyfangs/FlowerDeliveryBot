@@ -4,7 +4,7 @@ from django.conf import settings
 from prices import Price
 from satchless.process import ProcessManager
 
-from .steps import BillingAddressStep, ShippingStep, DeliveryStep, SummaryStep
+from .steps import BillingAddressStep, ShippingStep, DeliveryStep, DeliveryTimeStep, SummaryStep
 from ..cart import Cart
 from ..core import analytics
 from ..order.models import Order
@@ -61,6 +61,14 @@ class Checkout(ProcessManager):
             self.steps.append(self.delivery)
         else:
             self.delivery = None
+
+        if self.is_delivery_required():
+            self.delivery_time = DeliveryTimeStep(
+                self.request, self.get_storage('delivery_time'),
+                self.cart, default_address=self.billing_address)
+            self.steps.append(self.delivery_time)
+        else:
+            self.delivery_time = None
 
         self.billing = BillingAddressStep(
                 self.request, self.get_storage('billing'),

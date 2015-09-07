@@ -194,6 +194,68 @@ class DeliveryStep(BaseAddressStep):
         return super(DeliveryStep, self).process(extra_context=context)
 
 
+class DeliveryTimeStep(BaseAddressStep):
+    template = 'checkout/delivery_time.html'
+    title = _('Delivery Time')
+
+    def __init__(self, request, storage, cart, default_address=None):
+        self.cart = cart
+        address_data = storage.get('address', {})
+        if not address_data and default_address: 
+            address = default_address
+        else: 
+            address = Address(**address_data)
+        super(DeliveryTimeStep, self).__init__(request, storage, address)
+
+        delivery_choices = list((m.name, m) for m in get_delivery_options_for_items(self.cart, address=address))
+        selected_method_name = storage.get('delivery_method')
+        selected_method = None
+        for method_name, method in delivery_choices:
+            if method_name == selected_method_name:
+                selected_method = method
+                break
+        if selected_method is None:
+            # TODO: find cheapest not first
+            selected_method_name, selected_method = delivery_choices[0]
+        self.delivery_method = selected_method
+        self.forms['delivery'] = DeliveryForm(
+            delivery_choices, request.POST or None,
+            initial={'method': selected_method_name})
+
+    def __str__(self):
+        return 'delivery-time'
+
+    def save(self):
+        delivery_form = self.forms['delivery']
+        self.storage['address'] = Address.objects.as_data(self.address)
+        delivery_method = delivery_form.cleaned_data['method']
+        self.storage['delivery_method'] = delivery_method
+
+    def validate(self):
+        super(DeliveryTimeStep, self).validate()
+        if 'delivery_method' not in self.storage:
+            raise InvalidData()
+
+    def forms_are_valid(self):
+        base_forms_are_valid = super(DeliveryTimeStep, self).forms_are_valid()
+        delivery_form = self.forms['delivery']
+        if base_forms_are_valid and delivery_form.is_valid():
+            return True
+        return False
+
+    def add_to_order(self, order):
+        self.address.save()
+        order.delivery_method = self.delivery_method.name
+        order.delivery_method = self.address
+        if order.user:
+            User.objects.store_address(order.user, self.address, shipping=True)
+
+    def process(self, extra_context=None):
+        context = dict(extra_context or {})
+        context['delivery_form'] = self.forms['delivery']
+        return super(DeliveryTimeStep, self).process(extra_context=context)
+
+
 class ShippingStep(BaseAddressStep):
     template = 'checkout/shipping.html'
     title = _('Shipping Address')
