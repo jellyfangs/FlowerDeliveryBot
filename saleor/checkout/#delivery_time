@@ -1,4 +1,7 @@
-StoreApp
+#delivery_time
+- generate hour options from 10AM - 7PM
+- generate day options for 3 days
+- save delivery time to delivery group with order
 
 order HAS
 deliverygroup HAS
@@ -7,30 +10,20 @@ courier HAS
 ordereditem
 
 
-DispatchApp
-- manage courier inventory
-- route dispatches
-
-
-CourierApp
-- list dispatches
-- confirm delivery
-
-
-
-#delivery_time
-- save delivery time to delivery group with order
+#dispatch
 
 Admin
-- calendar view
+- sets blackout dates
+- sets operating hours
 
 Dispatcher
-- agenda view
+- calendar view
 - manages jobs
 - assigns courier
 
-
-
+User
+- show delivery times
+- save delivery time
 
 
 Features:
@@ -44,4 +37,3 @@ Manage Orders - View all pending and past deliveries at a glance. This allows yo
 Export Deliveries - Export deliveries for for each day. This makes creating delivery run sheets a breeze! Deliveries will be exported in CSV format.
 Products - Mark individual products as available/not available for local delivery.
 Customize - Add custom text to the local delivery section of the cart page. For example, you could specify that your store delivers within a 5 mile radius of Woolloomooloo, NSW.
-

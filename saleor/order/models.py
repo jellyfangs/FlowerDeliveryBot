@@ -35,26 +35,18 @@ class Order(models.Model, ItemSet):
         ('payment-pending', pgettext_lazy('Order status field value', 'Waiting for payment')),
         ('fully-paid', pgettext_lazy('Order status field value', 'Fully paid')),
         ('shipped', pgettext_lazy('Order status field value', 'Shipped')))
-    status = models.CharField(
-        pgettext_lazy('Order field', 'order status'),
-        max_length=32, choices=STATUS_CHOICES, default='new')
-    created = models.DateTimeField(
-        pgettext_lazy('Order field', 'created'),
-        default=now, editable=False)
-    last_status_change = models.DateTimeField(
-        pgettext_lazy('Order field', 'last status change'),
-        default=now, editable=False)
-    user = models.ForeignKey(
-        User, blank=True, null=True, related_name='orders',
-        verbose_name=pgettext_lazy('Order field', 'user'))
-    tracking_client_id = models.CharField(max_length=36, blank=True, editable=False)
+    status = models.CharField(pgettext_lazy('Order field', 'order status'), max_length=32, choices=STATUS_CHOICES, default='new')
+    last_status_change = models.DateTimeField(pgettext_lazy('Order field', 'last status change'), default=now, editable=False)
+    token = models.CharField(pgettext_lazy('Order field', 'token'), max_length=36, unique=True)
+    user = models.ForeignKey(User, blank=True, null=True, related_name='orders', verbose_name=pgettext_lazy('Order field', 'user'))
+    anonymous_user_email = models.EmailField(blank=True, default='', editable=False)
     billing_address = models.ForeignKey(Address, related_name='+', editable=False)
     shipping_address = models.ForeignKey(Address, related_name='+', editable=False, null=True)
-    fulfillment_address = models.ForeignKey(Address, related_name='+', editable=False, null=True)
-    shipping_method = models.CharField(pgettext_lazy('Order field', 'Delivery method'), max_length=255, blank=True)
-    fulfillment_address = models.CharField(pgettext_lazy('Order field', 'Fulfillment method'), max_length=255, blank=True)
-    anonymous_user_email = models.EmailField(blank=True, default='', editable=False)
-    token = models.CharField(pgettext_lazy('Order field', 'token'), max_length=36, unique=True)
+    shipping_method = models.CharField(pgettext_lazy('Order field', 'Shipping method'), max_length=255, blank=True)
+    delivery_address = models.ForeignKey(Address, related_name='+', editable=False, null=True)
+    delivery_method = models.CharField(pgettext_lazy('Order field', 'Delivery method'), max_length=255, blank=True)
+    tracking_client_id = models.CharField(max_length=36, blank=True, editable=False)
+    created = models.DateTimeField(pgettext_lazy('Order field', 'created'), default=now, editable=False)
 
     class Meta:
         ordering = ('-last_status_change',)
@@ -157,19 +149,16 @@ class DeliveryGroup(models.Model, ItemSet):
         ('cancelled', pgettext_lazy('Delivery group status field value', 'Cancelled')),
         ('delivered', pgettext_lazy('Delivery group status field value', 'Delivered')),
         ('shipped', pgettext_lazy('Delivery group status field value', 'Shipped')))
-    status = models.CharField(
-        pgettext_lazy('Delivery group field', 'delivery status'),
-        max_length=32, default='new', choices=STATUS_CHOICES)
+    status = models.CharField(pgettext_lazy('Delivery group field', 'delivery status'), max_length=32, default='new', choices=STATUS_CHOICES)
     order = models.ForeignKey(Order, related_name='groups', editable=False)
-    delivery_required = models.BooleanField(
-        pgettext_lazy('Delivery group field', 'delivery required'),
-        default=True)
+    delivery_required = models.BooleanField(pgettext_lazy('Delivery group field', 'delivery required'), default=True)
     delivery_price = PriceField(
         pgettext_lazy('Delivery group field', 'delivery price'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12,
         decimal_places=4,
         default=0,
         editable=False)
+    delivery_time = models.DateTimeField(blank=True, null=True)
     shipping_required = models.BooleanField(
         pgettext_lazy('Delivery group field', 'shipping required'),
         default=True)

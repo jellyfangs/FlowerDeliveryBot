@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from satchless.process import InvalidData
 
-from .forms import DeliveryForm, ShippingForm
+from .forms import DeliveryForm, DeliveryTimeForm, ShippingForm
 from ..checkout.forms import AnonymousEmailForm
 from ..core.utils import BaseStep
 from ..delivery import get_shipping_options_for_items, get_delivery_options_for_items
@@ -194,42 +194,20 @@ class DeliveryStep(BaseAddressStep):
         return super(DeliveryStep, self).process(extra_context=context)
 
 
-class DeliveryTimeStep(BaseAddressStep):
+class DeliveryTimeStep(BaseCheckoutStep):
     template = 'checkout/delivery_time.html'
     title = _('Delivery Time')
 
-    def __init__(self, request, storage, cart, default_address=None):
-        self.cart = cart
-        address_data = storage.get('address', {})
-        if not address_data and default_address: 
-            address = default_address
-        else: 
-            address = Address(**address_data)
-        super(DeliveryTimeStep, self).__init__(request, storage, address)
-
-        delivery_choices = list((m.name, m) for m in get_delivery_options_for_items(self.cart, address=address))
-        selected_method_name = storage.get('delivery_method')
-        selected_method = None
-        for method_name, method in delivery_choices:
-            if method_name == selected_method_name:
-                selected_method = method
-                break
-        if selected_method is None:
-            # TODO: find cheapest not first
-            selected_method_name, selected_method = delivery_choices[0]
-        self.delivery_method = selected_method
-        self.forms['delivery'] = DeliveryForm(
-            delivery_choices, request.POST or None,
-            initial={'method': selected_method_name})
+    def __init__(self, request, storage):
+        super(DeliveryTimeStep, self).__init__(request, storage)
+        delivery_time_form = DeliveryTimeForm(request.POST or None)
+        self.forms = {'delivery_time': delivery_time_form}
 
     def __str__(self):
         return 'delivery-time'
 
     def save(self):
-        delivery_form = self.forms['delivery']
-        self.storage['address'] = Address.objects.as_data(self.address)
-        delivery_method = delivery_form.cleaned_data['method']
-        self.storage['delivery_method'] = delivery_method
+        delivery_form = self.forms['delivery_time']
 
     def validate(self):
         super(DeliveryTimeStep, self).validate()
@@ -238,8 +216,8 @@ class DeliveryTimeStep(BaseAddressStep):
 
     def forms_are_valid(self):
         base_forms_are_valid = super(DeliveryTimeStep, self).forms_are_valid()
-        delivery_form = self.forms['delivery']
-        if base_forms_are_valid and delivery_form.is_valid():
+        delivery_time_form = self.forms['delivery_time']
+        if base_forms_are_valid and delivery_time_form.is_valid():
             return True
         return False
 
@@ -252,7 +230,7 @@ class DeliveryTimeStep(BaseAddressStep):
 
     def process(self, extra_context=None):
         context = dict(extra_context or {})
-        context['delivery_form'] = self.forms['delivery']
+        context['delivery_time_form'] = self.forms['delivery_time']
         return super(DeliveryTimeStep, self).process(extra_context=context)
 
 

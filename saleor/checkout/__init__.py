@@ -63,9 +63,7 @@ class Checkout(ProcessManager):
             self.delivery = None
 
         if self.is_delivery_required():
-            self.delivery_time = DeliveryTimeStep(
-                self.request, self.get_storage('delivery_time'),
-                self.cart, default_address=self.billing_address)
+            self.delivery_time = DeliveryTimeStep(self.request, self.get_storage('delivery_time'))
             self.steps.append(self.delivery_time)
         else:
             self.delivery_time = None
