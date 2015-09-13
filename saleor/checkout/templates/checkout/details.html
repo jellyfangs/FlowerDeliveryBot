@@ -20,6 +20,10 @@
 {% endblock %}
 
 {% block content %}
+
+
+{% block additional_message %}{% endblock %}
+
 <ul class="nav nav-pills nav-justified">
     {% for stepitem in checkout %}
     <li class="{% if stepitem == step %}active{% endif %}">

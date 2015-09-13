@@ -7,16 +7,14 @@
 {% load gross from prices_i18n %}
 {% load i18n %}
 
-{% block use_this_address %}
-    <button type="submit" class="btn {% if entry.is_selected %}btn-primary{% else %}btn-default{% endif %} btn-lg col-sm-12">{% trans "Ship to this address" %}</button>
-{% endblock %}
-
 {% block additional_message %}
     {% if not user.is_authenticated %}
-        <p class="alert alert-info">
-            {% trans "Already have an account?" %}
-            <a href="{% url "registration:login" %}?next={% url "checkout:details" step="billing-address" %}">{% trans "Log in" %}</a>
-        </p>
+        <a href="{% url "registration:login" %}?next={% url "checkout:details" step="delivery-time" %}">
+        <div class="bs-callout bs-callout-info">
+            <h4>{% trans "Already have an account?" %}</h4>
+            {% trans "Log in" %}
+        </div>
+        </a>
     {% endif %}
 {% endblock %}
 
