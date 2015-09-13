@@ -36,10 +36,9 @@
 {% block outercontent %}
 <div itemscope itemtype="http://schema.org/Product">
     <div class="row">
-        <div class="col-sm-6 col-sm-push-6">
+        <div class="callout-block text-center fade-in-b">
             <h1 itemprop="name">
                 {{ product }}
-
                 {% if product.is_in_stock %}
                     {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
                         {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
@@ -59,8 +58,13 @@
                 {% endif %}
             </h1>
 
-            <br>
-
+            <div itemprop="description">                
+              <p>{{ product.description|markdown }}</p>
+            </blockquote>
+            </div>
+        </div>
+        <br>
+        <div class="col-sm-6 col-sm-push-6">
             <div class="visible-xs">
                 {% if product.images.first %}
                     <img class="img-responsive" src="{{ product.images.first.image.crop.680x680 }}" alt="">
@@ -68,14 +72,6 @@
                     <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
                 {% endif %}
             </div>
-
-            <div itemprop="description">
-                <blockquote>
-                  <p>{{ product.description|markdown }}</p>
-                </blockquote>
-            </div>
-
-            <br>
 
             {% if product.requires_stocking %}
                 {% if product.is_in_stock %}

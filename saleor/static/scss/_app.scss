@@ -168,6 +168,15 @@ $icon-font-path: "../fonts/";
 	}
 }
 
+ul#id_delivery_time {
+    -moz-column-count: 2;
+    -moz-column-gap: 5px;
+    -webkit-column-count: 2;
+    -webkit-column-gap: 5px;
+    column-count: 2;
+    column-gap: 5px;
+}
+
 .nav {
 	> li {
 		> a {

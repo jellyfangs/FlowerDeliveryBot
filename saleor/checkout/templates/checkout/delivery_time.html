@@ -8,20 +8,16 @@
 {% load i18n %}
 
 {% block fields %}
-<!--     {{ delivery_time_form }} -->
-<label for="id_delivery_time_0">Delivery time:</label>
-
 <ul id="id_delivery_time">
-{% for choice in delivery_time_form.delivery_time %}
+    {% for choice in delivery_time_form.delivery_time %}
     <li>
         <label for="{{choice.id_for_label}}">
             {{ choice.tag }}
             <i></i> <span>{{ choice.choice_label }}</span>
         </label>
     </li>
-{% endfor %}
+    {% endfor %}
 </ul>
-
 {% endblock fields %}
 
 {% block form_submit %}
