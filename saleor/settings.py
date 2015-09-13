@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     'selectable',
     'materializecssform',
     'rest_framework',
+    'widget_tweaks',
 ]
 
 LOGGING = {

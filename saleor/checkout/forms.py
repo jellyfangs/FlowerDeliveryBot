@@ -17,12 +17,8 @@ class DeliveryForm(AddressForm):
 
 class DeliveryForm(forms.Form):
 
-    method = forms.ChoiceField(label=_('Delivery method'))
-
     def __init__(self, delivery_choices, *args, **kwargs):
         super(DeliveryForm, self).__init__(*args, **kwargs)
-        method_field = self.fields['method']
-        method_field.choices = delivery_choices
 
 
 # TIMELORD STUFF
