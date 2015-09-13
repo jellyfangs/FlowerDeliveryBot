@@ -1,4 +1,5 @@
 $icon-font-path: "../fonts/";
+@import "gallant/_variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import "components-font-awesome/scss/font-awesome";
 
@@ -183,6 +184,43 @@ $icon-font-path: "../fonts/";
 			}
 		}
 	}
+}
+
+.nav-pills {
+  > li {
+
+    // Links rendered as pills
+    > a {
+    	border: 1px solid #bbb;
+    	text-transform: uppercase;
+    	font-size: 1.3rem;
+    	font-weight: 900;
+    	color: #bbb;
+    }
+
+    > a:hover {
+			color: $nav-pills-active-link-hover-color;
+      background-color: $nav-pills-active-link-hover-bg;
+    }
+
+    // Active state
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $nav-pills-active-link-hover-color;
+        background-color: $nav-pills-active-link-hover-bg;
+      }
+    }
+  }
+}
+
+.nav-justified {
+  @media (min-width: $screen-sm-min) {
+    > li {
+      padding: 0px 3px;
+    }
+  }
 }
 
 .page-header {
