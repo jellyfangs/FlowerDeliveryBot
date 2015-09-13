@@ -46,13 +46,11 @@ class Checkout(ProcessManager):
     def generate_steps(self, cart):
         self.cart = cart
 
-        if self.is_shipping_required():
-            self.shipping = ShippingStep(
-                self.request, self.get_storage('shipping'),
-                self.cart, default_address=self.billing_address)
-            self.steps.append(self.shipping)
+        if self.is_delivery_required():
+            self.delivery_time = DeliveryTimeStep(self.request, self.get_storage('delivery_time'))
+            self.steps.append(self.delivery_time)
         else:
-            self.shipping = None
+            self.delivery_time = None
 
         if self.is_delivery_required():
             self.delivery = DeliveryStep(
@@ -62,11 +60,13 @@ class Checkout(ProcessManager):
         else:
             self.delivery = None
 
-        if self.is_delivery_required():
-            self.delivery_time = DeliveryTimeStep(self.request, self.get_storage('delivery_time'))
-            self.steps.append(self.delivery_time)
+        if self.is_shipping_required():
+            self.shipping = ShippingStep(
+                self.request, self.get_storage('shipping'),
+                self.cart, default_address=self.billing_address)
+            self.steps.append(self.shipping)
         else:
-            self.delivery_time = None
+            self.shipping = None
 
         self.billing = BillingAddressStep(
                 self.request, self.get_storage('billing'),
