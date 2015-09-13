@@ -7,17 +7,6 @@
 {% load gross from prices_i18n %}
 {% load i18n %}
 
-{% block additional_message %}
-    {% if not user.is_authenticated %}
-        <a href="{% url "registration:login" %}?next={% url "checkout:details" step="delivery-time" %}">
-        <div class="bs-callout bs-callout-info">
-            <h4>{% trans "Already have an account?" %}</h4>
-            {% trans "Log in" %}
-        </div>
-        </a>
-    {% endif %}
-{% endblock %}
-
 {% block fields %}
 <!--     {{ delivery_time_form }} -->
 <label for="id_delivery_time_0">Delivery time:</label>

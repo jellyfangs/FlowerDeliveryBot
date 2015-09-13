@@ -9,8 +9,11 @@
     {% if not user.is_authenticated %}
         <a href="{% url "registration:login" %}?next={% url "checkout:details" step="delivery-address" %}">
         <div class="bs-callout bs-callout-info">
-          <h4>{% trans "Already have an account?" %}</h4>
-          {% trans "Log in" %}
+            <div class="round round-lg blue">
+                <span class="glyphicon glyphicon-user"></span>
+            </div>            
+            <h4>{% trans "Already have an account?" %}</h4>
+            {% trans "Log in" %}
         </div>
         </a>
     {% endif %}
@@ -69,8 +72,6 @@
             {{ step.forms.address.country_area|add_class:"form-control"|attr:"placeholder:Country area" }}
         </div> -->
     </div>
-
-    {{ delivery_form|as_horizontal_form }}
 {% endblock fields %}
 
 {% block form_submit %}

@@ -2,11 +2,15 @@
 
 {% load as_vertical_form from bootstrap %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block additional_message %}
     {% if not user.is_authenticated %}
         <a href="{% url "registration:login" %}?next={% url "checkout:details" step="billing-address" %}">
         <div class="bs-callout bs-callout-info">
+            <div class="round round-lg blue">
+                <span class="glyphicon glyphicon-user"></span>
+            </div>
           <h4>{% trans "Already have an account?" %}</h4>
           {% trans "Log in" %}
         </div>
@@ -19,21 +23,55 @@
 {% endblock %}
 
 {% block fields %}
-    <div id="form-full-toggle" data-label="{% trans "Same as delivery address" %}"></div>
+<!--     <div id="form-full-toggle" data-label="{% trans "Same as delivery address" %}"></div> -->
+
     <div class="form-full">
         {% if not user.is_authenticated %}
-            {{ step.forms.anonymous|as_vertical_form }}
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.anonymous.id_for_label }}">{{ step.forms.anonymous.label }}</label>
+            {{ step.forms.anonymous }}
+        </div>
         {% endif %}
-        {{ step.forms.address.phone|as_vertical_form }}
-        {{ step.forms.address.first_name|as_vertical_form }}
-        {{ step.forms.address.last_name|as_vertical_form }}
-        {{ step.forms.address.company_name|as_vertical_form }}
-        {{ step.forms.address.street_address_1|as_vertical_form }}
-        {{ step.forms.address.street_address_2|as_vertical_form }}
-        {{ step.forms.address.city|as_vertical_form }}
-        {{ step.forms.address.postal_code|as_vertical_form }}
-        {# step.forms.address.country|as_vertical_form #}
-        {# step.forms.address.country_area|as_vertical_form #}
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.phone.id_for_label }}">{{ step.forms.address.phone.label }}</label>
+            {{ step.forms.address.phone|add_class:"form-control"|attr:"placeholder:Your Phone Number" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.first_name.id_for_label }}">{{ step.forms.address.first_name.label }}</label>
+            {{ step.forms.address.first_name|add_class:"form-control"|attr:"placeholder:First name" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.last_name.id_for_label }}">{{ step.forms.address.last_name.label }}</label>
+            {{ step.forms.address.last_name|add_class:"form-control"|attr:"placeholder:Last name" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.company_name.id_for_label }}">{{ step.forms.address.company_name.label }}</label>
+            {{ step.forms.address.company_name|add_class:"form-control"|attr:"placeholder:Company" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.street_address_1.id_for_label }}">{{ step.forms.address.street_address_1.label }}</label>
+            {{ step.forms.address.street_address_1|add_class:"form-control"|attr:"placeholder:Address" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.street_address_2.id_for_label }}">{{ step.forms.address.street_address_2.label }}</label>
+            {{ step.forms.address.street_address_2|add_class:"form-control"|attr:"placeholder:Address 2" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.city.id_for_label }}">{{ step.forms.address.city.label }}</label>
+            {{ step.forms.address.city|add_class:"form-control"|attr:"placeholder:City" }}
+        </div>
+        <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.postal_code.id_for_label }}">{{ step.forms.address.postal_code.label }}</label>
+            {{ step.forms.address.postal_code|add_class:"form-control"|attr:"placeholder:Zip" }}
+        </div>
+<!--         <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.country.id_for_label }}">{{ step.forms.address.country.label }}</label>
+            {{ step.forms.address.country|add_class:"form-control"|attr:"placeholder:Country name" }}
+        </div> -->
+<!--         <div class="form-group float-label-control label-bottom">
+            <label for="{{ step.forms.address.country_area.id_for_label }}">{{ step.forms.address.country_area.label }}</label>
+            {{ step.forms.address.country_area|add_class:"form-control"|attr:"placeholder:Country area" }}
+        </div> -->
     </div>
 {% endblock fields %}
 
