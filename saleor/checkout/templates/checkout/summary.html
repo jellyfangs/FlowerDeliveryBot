@@ -18,7 +18,24 @@
                     {% else %}
                         <p class="text-danger">{% trans "No address given yet." %}</p>
                     {% endif %}
-                    <p><a href="{{ checkout.shipping.get_absolute_url }}">{% trans "Edit shipping details" %}</a></p>
+                    <p><a href="{{ checkout.shipping.get_absolute_url }}">{% trans "Change shipping details" %}</a></p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if checkout.is_delivery_required %}
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% trans "Delivery time" %}
+                </div>
+                <div class="panel-body">
+                    {% if checkout.delivery_address %}
+                        <address>{% include "userprofile/snippets/address-details.html" with address=checkout.delivery_address %}</address>
+                    {% else %}
+                        <p class="text-danger">{% trans "No address given yet." %}</p>
+                    {% endif %}
+                    <p><a href="{{ checkout.delivery.get_absolute_url }}">{% trans "Change delivery time" %}</a></p>
                 </div>
             </div>
         </div>
@@ -35,7 +52,7 @@
                     {% else %}
                         <p class="text-danger">{% trans "No address given yet." %}</p>
                     {% endif %}
-                    <p><a href="{{ checkout.delivery.get_absolute_url }}">{% trans "Edit delivery details" %}</a></p>
+                    <p><a href="{{ checkout.delivery.get_absolute_url }}">{% trans "Change delivery details" %}</a></p>
                 </div>
             </div>
         </div>
@@ -51,77 +68,58 @@
                     {% else %}
                         <p class="text-danger">{% trans "No address given yet." %}</p>
                     {% endif %}
-                    <p><a href="{{ checkout.billing.get_absolute_url }}">{% trans "Edit billing details" %}</a></p>
+                    <p><a href="{{ checkout.billing.get_absolute_url }}">{% trans "Change billing details" %}</a></p>
                 </div>
             </div>
         </div>
-    </div>
+    </div><!-- preflight info -->
 
     {% for shipping, shipping_cost, total_with_shipping in checkout.get_shippings %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                {% blocktrans with number=forloop.counter %}Shipment #{{ number }}{% endblocktrans %}
+                <div class="panel-title">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="col-sm-6">{% trans "Item" %}</th>
-                        <th class="col-sm-3 text-right">{% trans "Price" %}</th>
-                        <th class="col-sm-3 text-right">{% trans "Subtotal" %}</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">{% trans "Total" %}</th>
-                        <th class="text-right">{% gross total_with_shipping %}</th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for item in shipping %}
-                        <tr>
-                            <td>{{ item.product }}{% if item.quantity != 1 %} <em>×{{ item.quantity }}</em>{% endif %}</td>
-                            <td class="text-right">{% gross item.get_price_per_item %}</td>
-                            <td class="text-right">{% gross item.get_total %}</td>
-                        </tr>
-                    {% endfor %}
-                    {% if shipping_cost.gross %}
-                        <tr>
-                            <td>
-                                {% trans "Shipping" %}
-                            </td>
-                            <td class="text-right">{% gross shipping_cost %}</td>
-                            <td class="text-right">{% gross shipping_cost %}</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+            <div class="panel-body">
+                {% for item in shipping %}
+                    <div class="row">
+                        <div class="col-xs-2"><img class="img-responsive" src=""></div>
+                        <div class="col-xs-4"><h4 class="product-name"><strong>{{ item.product }}</strong></h4><h4><small>{{ item.description }}</small></h4></div>
+                        <div class="col-xs-3 text-right"><h6>{% gross item.get_price_per_item %} {% if item.quantity != 1 %} <span class="text-muted">x</span> {{ item.quantity }}{% endif %}</h6></div>
+                        <div class="col-xs-3 text-right"><h6><strong>{% gross item.get_total %}</strong></h6></div>
+                    </div>
+                {% endfor %}
+                <hr>
+            </div>
+            <div class="panel-footer">
+                <div class="row text-center">
+                {# with total=checkout.get_total #}
+                    <div class="col-xs-9">
+                        {% if total.tax %}
+                            ({% blocktrans with tax=total.tax|floatformat:2 currency=total.currency %}includes {{ tax }} <span class="currency">{{ currency }}</span> tax{% endblocktrans %})
+                        {% endif %}
+                        <h4 class="text-right">{% trans "Total" %} <strong>{% gross total_with_shipping %}</strong></h4>
+                    </div>
+                    <div class="col-xs-3">
+                        {% if all_steps_valid %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <p><button type="button" class="btn btn-success btn-block">{% trans "Place order" %}</button></p>
+                            </form>
+                        {% else %}
+                            <p>{% trans "Before continuing please make sure that you've provided all of the information required." %}</p>
+                        {% endif %}
+                    </div>
+                {# endwith #}
+                </div>
+            </div>
         </div>
     {% endfor %}
-
-    {# with total=checkout.get_total #}
-        <div class="alert alert-success">
-            {% trans "Your total will be" %}:
-            <strong>{# gross total #}</strong>
-            {% if total.tax %}
-                ({% blocktrans with tax=total.tax|floatformat:2 currency=total.currency %}includes {{ tax }} <span class="currency">{{ currency }}</span> tax{% endblocktrans %})
-            {% endif %}
-        </div>
-    {# endwith #}
-
-    {% if all_steps_valid %}
-        <form method="post">
-            {% csrf_token %}
-            <p>
-                <button type="submit" class="btn btn-primary btn-lg pull-right">
-                    {% trans "Place order" %}
-                </button>
-            </p>
-        </form>
-    {% else %}
-        <div class="alert alert-danger">
-            <p>{% trans "Before continuing please make sure that you've provided all of the information required." %}</p>
-        </div>
-    {% endif %}
 {% endblock forms %}
 
 {% block footer_scripts %}

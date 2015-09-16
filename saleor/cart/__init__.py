@@ -71,6 +71,7 @@ class Cart(cart.Cart):
             else:
                 variant = product.variants.get_subclass(pk=item.data['variant_id'])
             quantity = item.quantity
+            name = 'hello'
             cart.add(variant, quantity=quantity, check_quantity=False, skip_session_cart=True)
         return cart
 
