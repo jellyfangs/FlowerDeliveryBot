@@ -79,23 +79,13 @@ class ProductManager(InheritanceManager):
 
 @python_2_unicode_compatible
 class Product(models.Model, ItemRange):
-    categories = models.ManyToManyField(
-        Category, verbose_name=pgettext_lazy('Product field', 'categories'),
-        related_name='products')
-    name = models.CharField(
-        pgettext_lazy('Product field', 'name'), max_length=128)
-    description = models.TextField(
-        verbose_name=pgettext_lazy('Product field', 'description'))
-    price = PriceField(
-        pgettext_lazy('Product field', 'price'),
-        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
-    # weight = WeightField(
-    #     pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
-    #     max_digits=6, decimal_places=2, blank=True, null=True)
-    attributes = models.ManyToManyField(
-        'ProductAttribute', related_name='products', blank=True, null=True)
-    available_on = models.DateField(
-        pgettext_lazy('Product field', 'available on'), blank=True, null=True)
+    categories = models.ManyToManyField(Category, verbose_name=pgettext_lazy('Product field', 'categories'), related_name='products')
+    name = models.CharField(pgettext_lazy('Product field', 'name'), max_length=128)
+    description = models.TextField(verbose_name=pgettext_lazy('Product field', 'description'))
+    price = PriceField(pgettext_lazy('Product field', 'price'), currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
+    # weight = WeightField(pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2, blank=True, null=True)
+    attributes = models.ManyToManyField('ProductAttribute', related_name='products', blank=True, null=True)
+    available_on = models.DateField(pgettext_lazy('Product field', 'available on'), blank=True, null=True)
 
     objects = ProductManager()
 
@@ -161,18 +151,10 @@ class Product(models.Model, ItemRange):
 @python_2_unicode_compatible
 class ProductVariant(models.Model, Item):
     product = models.ForeignKey(Product, related_name='variants')
-    sku = models.CharField(
-        pgettext_lazy('Variant field', 'SKU'), max_length=32, unique=True)
-    name = models.CharField(
-        pgettext_lazy('Variant field', 'variant name'), max_length=100, blank=True)
-    price_override = PriceField(
-        pgettext_lazy('Variant field', 'price override'),
-        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
-        blank=True, null=True)
-    # weight_override = WeightField(
-    #     pgettext_lazy('Variant field', 'weight override'),
-    #     unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
-    #     blank=True, null=True)
+    sku = models.CharField(pgettext_lazy('Variant field', 'SKU'), max_length=32, unique=True)
+    name = models.CharField(pgettext_lazy('Variant field', 'variant name'), max_length=100, blank=True)
+    price_override = PriceField(pgettext_lazy('Variant field', 'price override'), currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2, blank=True, null=True)
+    # weight_override = WeightField(pgettext_lazy('Variant field', 'weight override'), unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2, blank=True, null=True)
     attributes = JSONField(pgettext_lazy('Variant field', 'attributes'), default={})
     is_delivery_required = models.BooleanField(blank=True, default=False)
     is_shipping_required = models.BooleanField(blank=True, default=False)
@@ -184,7 +166,7 @@ class ProductVariant(models.Model, Item):
         app_label = 'product'
 
     def __str__(self):
-        return self.name or self.sku
+        return '%s (%s)' % (self.product.name, self.sku)
 
     def get_weight(self):
         return self.weight_override or self.product.weight
