@@ -66,6 +66,7 @@ class Order(models.Model, ItemSet):
         pgettext_lazy('Order field', 'token'), max_length=36, unique=True)
 
     class Meta:
+        app_label = 'order'
         ordering = ('-last_status_change',)
 
     def save(self, *args, **kwargs):
@@ -181,6 +182,9 @@ class DeliveryGroup(models.Model, ItemSet):
         editable=False)
 
     objects = DeliveryGroupManager()
+
+    class Meta:
+        app_label = 'order'
 
     def __str__(self):
         return pgettext_lazy(
@@ -299,6 +303,9 @@ class OrderedItem(models.Model, ItemLine):
         return Price(net=self.unit_price_net, gross=self.unit_price_gross,
                      currency=settings.DEFAULT_CURRENCY)
 
+    class Meta:
+        app_label = 'order'
+
     def __str__(self):
         return self.product_name
 
@@ -363,6 +370,7 @@ class Payment(BasePayment):
         return Price(self.captured_amount, currency=self.currency)
 
     class Meta:
+        app_label = 'order'
         ordering = ('-pk',)
 
 
@@ -383,6 +391,7 @@ class OrderHistoryEntry(models.Model):
         return 'OrderHistoryEntry for Order #%d' % self.order.pk
 
     class Meta:
+        app_label = 'order'
         ordering = ['date']
 
 
@@ -392,6 +401,9 @@ class OrderNote(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     order = models.ForeignKey(Order, related_name='notes')
     content = models.CharField(max_length=250)
+
+    class Meta:
+        app_label = 'order'
 
     def __str__(self):
         return 'OrderNote for Order #%d' % self.order.pk
