@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Checkout" %} — {{ block.super }}{% endblock %}
+
+{% block outerbreadcrumb %}{% endblock %}
+
+{% block header %}
+    <header class="navbar navbar-default navbar-static-top" role="navigation">
+        <nav class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Saleor</a>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-pills nav-justified">
+    {% for stepitem in checkout %}
+    <li class="{% if stepitem == step %}active{% endif %}">
+        <a href="{{ stepitem.get_absolute_url }}">{% if stepitem %}<i class="fa fa-check-circle"></i> {% endif %}{{ stepitem.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+{% block step_info %}{% endblock %}
+
+{% block forms %}{% endblock %}
+
+{% endblock content %}
