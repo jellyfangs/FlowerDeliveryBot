@@ -212,7 +212,7 @@ $(document).on("ajaxComplete", function(event, response) {
 
 class FormShippingToggler extends React.Component {
     state = {
-        value: true
+        value: checked
     };
 
     componentDidMount() {
