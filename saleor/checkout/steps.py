@@ -130,7 +130,7 @@ class BillingAddressStep(BaseAddressStep):
 
 class ShippingStep(BaseAddressStep):
     template = 'checkout/shipping.html'
-    title = _('Shipping Address')
+    title = _('Delivery Address')
 
     def __init__(self, request, storage, cart,
                  default_address=None):
@@ -190,6 +190,32 @@ class ShippingStep(BaseAddressStep):
         context = dict(extra_context or {})
         context['delivery_form'] = self.forms['delivery']
         return super(ShippingStep, self).process(extra_context=context)
+
+
+class DeliveryTimeStep(BaseCheckoutStep):
+    template = 'checkout/shipping.html'
+    title = _('Delivery Time')
+
+    def __init__(self, request, storage, cart, default_address=None):
+        pass
+
+    def __str__(self):
+        return 'delivery-time'
+
+    def save(self):
+        pass
+
+    def validate(self):
+        pass
+
+    def forms_are_valid(self):
+        pass
+
+    def add_to_order(self, order):
+        pass
+
+    def process(self, extra_context=None):
+        pass
 
 
 class SummaryStep(BaseCheckoutStep):
