@@ -1,0 +1,16 @@
+{% extends "checkout/address.html" %}
+{% load as_horizontal_form from bootstrap %}
+{% load as_vertical_form from bootstrap %}
+{% load i18n %}
+
+{% block fields %}
+
+    {{ delivery_time_form|as_vertical_form }}
+
+{% endblock fields %}
+
+{% block form_submit %}
+    <button type="submit" class="btn btn-primary">
+        {% trans "Delivery at this time" %}
+    </button>
+{% endblock %}

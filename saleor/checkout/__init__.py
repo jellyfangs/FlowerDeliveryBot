@@ -34,12 +34,10 @@ class Checkout(ProcessManager):
         self.steps = []
         self.items = []
         try:
-            self.storage = CheckoutStorage(
-                request.session[STORAGE_SESSION_KEY])
+            self.storage = CheckoutStorage(request.session[STORAGE_SESSION_KEY])
         except KeyError:
             self.storage = CheckoutStorage()
-        self.cart = Cart.for_session_cart(request.cart,
-                                          discounts=request.discounts)
+        self.cart = Cart.for_session_cart(request.cart, discounts=request.discounts)
         self.generate_steps(self.cart)
 
     def __iter__(self):
@@ -47,9 +45,11 @@ class Checkout(ProcessManager):
 
     def generate_steps(self, cart):
         self.cart = cart
+
         self.billing = BillingAddressStep(
             self.request, self.get_storage('billing'))
         self.steps.append(self.billing)
+
         if self.is_shipping_required():
             self.shipping = ShippingStep(
                 self.request, self.get_storage('shipping'),
@@ -57,11 +57,12 @@ class Checkout(ProcessManager):
             self.steps.append(self.shipping)
         else:
             self.shipping = None
+
         if self.is_shipping_required():
-            self.delivery_time = DeliveryTimeStep(
-                self.request, self.get_storage('delivery_time'),
-                self.cart)
-            self.steps.append(self.delivery_time)
+            self.delivery_times = DeliveryTimeStep(
+                self.request, self.get_storage('delivery_time'))
+            self.steps.append(self.delivery_times)
+        
         summary_step = SummaryStep(
             self.request, self.get_storage('summary'), checkout=self)
         self.steps.append(summary_step)
@@ -113,6 +114,21 @@ class Checkout(ProcessManager):
         storage = self.get_storage('shipping')
         storage['address'] = None
 
+    @property
+    def delivery_time(self):
+        storage = self.get_storage('delivery_time')
+        return storage.get('delivery_time', {})
+
+    @delivery_time.setter
+    def delivery_time(self, selected_delivery_time):
+        storage = self.get_storage('delivery_time')
+        storage['delivery_time'] = selected_delivery_time
+
+    @delivery_time.deleter
+    def delivery_time(self):
+        storage = self.get_storage('delivery_time')
+        storage['delivery_time'] = None
+
     def get_storage(self, name):
         return self.storage[name]
 
@@ -121,8 +137,7 @@ class Checkout(ProcessManager):
         total = sum(
             (total_with_delivery
              for delivery, delivery_cost, total_with_delivery
-             in self.get_deliveries(**kwargs)),
-            zero)
+             in self.get_deliveries(**kwargs)), zero)
         return total
 
     def save(self):
@@ -138,8 +153,7 @@ class Checkout(ProcessManager):
     def get_deliveries(self, **kwargs):
         for partition in self.cart.partition():
             if self.shipping:
-                delivery_cost = self.shipping.delivery_method.get_delivery_total(
-                    partition)
+                delivery_cost = self.shipping.delivery_method.get_delivery_total(partition)
             else:
                 delivery_cost = Price(0, currency=settings.DEFAULT_CURRENCY)
             total_with_delivery = partition.get_total(**kwargs) + delivery_cost

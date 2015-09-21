@@ -6,7 +6,7 @@
 
 {% block forms %}
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {% trans "Billing address" %}
@@ -17,15 +17,15 @@
                     {% else %}
                         <p class="text-danger">{% trans "No address given yet." %}</p>
                     {% endif %}
-                    <p><a href="{{ checkout.billing.get_absolute_url }}">{% trans "Edit billing details" %}</a></p>
+                    <p><a href="{{ checkout.billing.get_absolute_url }}">{% trans "Change billing details" %}</a></p>
                 </div>
             </div>
         </div>
         {% if checkout.is_shipping_required %}
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        {% trans "Shipping address" %}
+                        {% trans "Delivery address" %}
                     </div>
                     <div class="panel-body">
                         {% if checkout.shipping_address %}
@@ -33,7 +33,28 @@
                         {% else %}
                             <p class="text-danger">{% trans "No address given yet." %}</p>
                         {% endif %}
-                        <p><a href="{{ checkout.shipping.get_absolute_url }}">{% trans "Edit shipping details" %}</a></p>
+                        <p><a href="{{ checkout.shipping.get_absolute_url }}">{% trans "Change delivery details" %}</a></p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if checkout.is_shipping_required %}
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {% trans "Delivery time" %}
+                    </div>
+                    <div class="panel-body">
+                        {% if checkout.delivery_time %}
+                            <br>
+                            {{ checkout.delivery_time }}
+                            <br><br><br><br>
+                        {% else %}
+                            <br>
+                            {% trans "No delivery time set" %}
+                            <br><br><br><br>
+                        {% endif %}
+                        <p><a href="{{ checkout.delivery_times.get_absolute_url }}">{% trans "Change delivery time" %}</a></p>
                     </div>
                 </div>
             </div>

@@ -7,12 +7,63 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from satchless.process import InvalidData
 
-from .forms import DeliveryForm
+from .forms import DeliveryForm, DeliveryTimeForm
 from ..checkout.forms import AnonymousEmailForm
 from ..core.utils import BaseStep
 from ..delivery import get_delivery_options_for_items
 from ..userprofile.forms import AddressForm
 from ..userprofile.models import Address, User
+
+"""
+class Step(object):
+
+    def __str__(self):
+        raise NotImplementedError()  # pragma: no cover
+
+    def validate(self):
+        raise NotImplementedError()  # pragma: no cover
+
+
+class BaseStep(Step):
+
+    forms = None
+    template = ''
+    group = None
+
+    def __init__(self, request):
+        self.request = request
+        self.forms = {}
+
+    def __nonzero__(self):
+        try:
+            self.validate()
+        except InvalidData:
+            return False
+        return True
+
+    def save(self):
+        raise NotImplementedError()
+
+    def forms_are_valid(self):
+        for form in self.forms.values():
+            if not form.is_valid():
+                return False
+        return True
+
+    def validate(self):
+        if not self.forms_are_valid():
+            raise InvalidData()
+
+    def process(self, extra_context=None):
+        context = extra_context or {}
+        if not self.forms_are_valid() or self.request.method == 'GET':
+            context['step'] = self
+            return TemplateResponse(self.request, self.template, context)
+        self.save()
+
+    def get_absolute_url(self):
+        raise NotImplementedError()
+"""
 
 
 class BaseCheckoutStep(BaseStep):
@@ -88,11 +139,9 @@ class BillingAddressStep(BaseAddressStep):
                 skip = True
         super(BillingAddressStep, self).__init__(request, storage, address)
         if not request.user.is_authenticated():
-            self.anonymous_user_email = self.storage.get(
-                'anonymous_user_email')
+            self.anonymous_user_email = self.storage.get('anonymous_user_email')
             initial = {'email': self.anonymous_user_email}
-            self.forms['anonymous'] = AnonymousEmailForm(request.POST or None,
-                                                         initial=initial)
+            self.forms['anonymous'] = AnonymousEmailForm(request.POST or None, initial=initial)
         else:
             self.anonymous_user_email = ''
         if skip:
@@ -132,18 +181,17 @@ class ShippingStep(BaseAddressStep):
     template = 'checkout/shipping.html'
     title = _('Delivery Address')
 
-    def __init__(self, request, storage, cart,
-                 default_address=None):
+    def __init__(self, request, storage, cart, default_address=None):
         self.cart = cart
+
         address_data = storage.get('address', {})
         if not address_data and default_address:
             address = default_address
         else:
             address = Address(**address_data)
         super(ShippingStep, self).__init__(request, storage, address)
-        delivery_choices = list(
-            (m.name, m) for m in get_delivery_options_for_items(
-                self.cart, address=address))
+
+        delivery_choices = list((m.name, m) for m in get_delivery_options_for_items(self.cart, address=address))
         selected_method_name = storage.get('delivery_method')
         selected_method = None
         for method_name, method in delivery_choices:
@@ -159,7 +207,7 @@ class ShippingStep(BaseAddressStep):
             initial={'method': selected_method_name})
 
     def __str__(self):
-        return 'shipping-address'
+        return 'delivery-address'
 
     def save(self):
         delivery_form = self.forms['delivery']
@@ -193,29 +241,54 @@ class ShippingStep(BaseAddressStep):
 
 
 class DeliveryTimeStep(BaseCheckoutStep):
-    template = 'checkout/shipping.html'
+    template = 'checkout/delivery_time.html'
     title = _('Delivery Time')
 
-    def __init__(self, request, storage, cart, default_address=None):
-        pass
+    def __init__(self, request, storage):
+        super(DeliveryTimeStep, self).__init__(request, storage)
+        available_times = [
+            ('10AM', 'Tomorrow 9AM - 10AM'), 
+            ('11AM', 'Tomorrow 10AM - 11AM'), 
+            ('12PM', 'Tomorrow 11AM - 12PM'),
+            ('1PM', 'Tomorrow 12PM - 1PM'),
+            ('2PM', 'Tomorrow 1PM - 2PM'),
+            ('3PM', 'Tomorrow 2PM - 3PM'),
+            ('4PM', 'Tomorrow 3PM - 4PM'),
+            ('5PM', 'Tomorrow 4PM - 5PM'),]
+        selected_time = storage.get('delivery_time')
+        if selected_time is None:
+            selected_time = available_times[0]
+        self.selected_delivery_time = selected_time
+        self.forms['delivery_time'] = DeliveryTimeForm(
+            available_times, request.POST or None,
+            initial={'time': selected_time})
 
     def __str__(self):
         return 'delivery-time'
 
     def save(self):
-        pass
+        delivery_time_form = self.forms['delivery_time']
+        selected_delivery_time = delivery_time_form.cleaned_data['time']
+        self.storage['delivery_time'] = selected_delivery_time
 
     def validate(self):
-        pass
+        if 'delivery_time' not in self.storage:
+            raise InvalidData()
 
     def forms_are_valid(self):
-        pass
+        base_forms_are_valid = super(DeliveryTimeStep, self).forms_are_valid()
+        delivery_time_form = self.forms['delivery_time']
+        if base_forms_are_valid and delivery_time_form.is_valid():
+            return True
+        return False
 
     def add_to_order(self, order):
-        pass
+        print order.created
 
     def process(self, extra_context=None):
-        pass
+        context = dict(extra_context or {})
+        context['delivery_time_form'] = self.forms['delivery_time']
+        return super(DeliveryTimeStep, self).process(extra_context=context)
 
 
 class SummaryStep(BaseCheckoutStep):

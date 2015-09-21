@@ -10,6 +10,17 @@ class ShippingForm(AddressForm):
     use_billing = forms.BooleanField(initial=True)
 
 
+class DeliveryTimeForm(forms.Form):
+
+    time = forms.ChoiceField(label=_('Delivery time'))
+
+    def __init__(self, available_times, *args, **kwargs):
+        super(DeliveryTimeForm, self).__init__(*args, **kwargs)
+        time_field = self.fields['time']
+        time_field.choices = available_times
+        # time_field.widget = forms.RadioSelect()
+
+
 class DeliveryForm(forms.Form):
 
     method = forms.ChoiceField(label=_('Shipping method'))
