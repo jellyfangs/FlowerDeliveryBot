@@ -10,9 +10,10 @@ from satchless.process import InvalidData
 from .forms import DeliveryForm, DeliveryTimeForm
 from ..checkout.forms import AnonymousEmailForm
 from ..core.utils import BaseStep
-from ..delivery import get_delivery_options_for_items
+from ..delivery import get_delivery_options_for_items, get_delivery_times
 from ..userprofile.forms import AddressForm
 from ..userprofile.models import Address, User
+from datetime import datetime
 
 """
 class Step(object):
@@ -246,15 +247,7 @@ class DeliveryTimeStep(BaseCheckoutStep):
 
     def __init__(self, request, storage):
         super(DeliveryTimeStep, self).__init__(request, storage)
-        available_times = [
-            ('10AM', 'Tomorrow 9AM - 10AM'), 
-            ('11AM', 'Tomorrow 10AM - 11AM'), 
-            ('12PM', 'Tomorrow 11AM - 12PM'),
-            ('1PM', 'Tomorrow 12PM - 1PM'),
-            ('2PM', 'Tomorrow 1PM - 2PM'),
-            ('3PM', 'Tomorrow 2PM - 3PM'),
-            ('4PM', 'Tomorrow 3PM - 4PM'),
-            ('5PM', 'Tomorrow 4PM - 5PM'),]
+        available_times = get_delivery_times(datetime.now())
         selected_time = storage.get('delivery_time')
         if selected_time is None:
             selected_time = available_times[0]
