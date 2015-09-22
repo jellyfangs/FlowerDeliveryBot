@@ -247,11 +247,10 @@ class DeliveryTimeStep(BaseCheckoutStep):
 
     def __init__(self, request, storage):
         super(DeliveryTimeStep, self).__init__(request, storage)
-        available_times = get_delivery_times(datetime.now())
+        available_times = get_delivery_times(datetime.now())        
         selected_time = storage.get('delivery_time')
         if selected_time is None:
-            selected_time = available_times[0]
-        self.selected_delivery_time = selected_time
+            selected_time = available_times[0][0]
         self.forms['delivery_time'] = DeliveryTimeForm(
             available_times, request.POST or None,
             initial={'time': selected_time})
@@ -276,7 +275,12 @@ class DeliveryTimeStep(BaseCheckoutStep):
         return False
 
     def add_to_order(self, order):
-        print order.created
+        import pytz
+        local = pytz.timezone("America/Los_Angeles")
+        naive = datetime.strptime(self.storage['delivery_time'], '%b %d %Y %I:%M %p')
+        local_dt = local.localize(naive, is_dst=None)
+        utc_dt = local_dt.astimezone(pytz.utc)
+        order.due = utc_dt
 
     def process(self, extra_context=None):
         context = dict(extra_context or {})
@@ -292,7 +296,7 @@ class SummaryStep(BaseCheckoutStep):
         self.checkout = checkout
         super(SummaryStep, self).__init__(request, storage)
 
-    def __str__(self):
+    def __str__(self): 
         return 'summary'
 
     def process(self, extra_context=None):

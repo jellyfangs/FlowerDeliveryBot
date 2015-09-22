@@ -81,5 +81,4 @@ def get_delivery_times(now):
             timeslots.append(("{:%b %d %Y %I:%M %p}".format(start), "{:%A %I:%M %p} - {:%I:%M %p}".format(start - window, start)))
             start += window
         next_x_days += 1
-
     return timeslots
