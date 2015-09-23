@@ -100,7 +100,8 @@ MIDDLEWARE_CLASSES = [
     'saleor.cart.middleware.CartMiddleware',
     'saleor.core.middleware.DiscountMiddleware',
     'saleor.core.middleware.GoogleAnalytics',
-    'saleor.core.middleware.CheckHTML'
+    'saleor.core.middleware.CheckHTML',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 INSTALLED_APPS = [
@@ -138,6 +139,19 @@ INSTALLED_APPS = [
     'selectable',
     'materializecssform',
     'rest_framework',
+    "django_tables2",
+
+    # RapidSMS
+    # "saleor.rapidsms",
+    "rapidsms",
+    "rapidsms.backends.database",
+    "rapidsms.contrib.handlers",
+    "rapidsms.contrib.httptester",
+    "rapidsms.contrib.messagelog",
+    "rapidsms.contrib.messaging",
+    # "rapidsms.contrib.registration",
+    # "rapidsms.contrib.echo",
+    "rapidsms.contrib.default",  # Must be last
 ]
 
 LOGGING = {
@@ -172,6 +186,12 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'formatter': 'simple'
         },
+        # 'file': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     'formatter': 'basic',
+        #     'filename': os.path.join(PROJECT_ROOT, 'rapidsms.log'),
+        # },
     },
     'loggers': {
         'django.request': {
@@ -183,7 +203,12 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True
-        }
+        },
+        'rapidsms': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 
@@ -265,3 +290,16 @@ if AWS_MEDIA_BUCKET_NAME:
     THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+
+INSTALLED_BACKENDS = {
+    "message_tester": {
+        "ENGINE": "rapidsms.backends.database.DatabaseBackend",
+    },
+}
+
+RAPIDSMS_HANDLERS = (
+    # 'rapidsms.contrib.echo.handlers.echo.EchoHandler',
+    # 'rapidsms.contrib.echo.handlers.ping.PingHandler',
+)

@@ -1,0 +1,18 @@
+from django.conf import settings
+from django.conf.urls import include, url
+from django.conf.urls.static import static
+
+
+urlpatterns = [
+    # RapidSMS core URLs
+    url(r'^accounts/', include('rapidsms.urls.login_logout')),
+    url(r'^$', 'rapidsms.views.dashboard', name='rapidsms-dashboard'),
+    # RapidSMS contrib app URLs
+    url(r'^httptester/', include('rapidsms.contrib.httptester.urls')),
+    url(r'^messagelog/', include('rapidsms.contrib.messagelog.urls')),
+    url(r'^messaging/', include('rapidsms.contrib.messaging.urls')),
+    url(r'^registration/', include('rapidsms.contrib.registration.urls')),
+
+    # Third party URLs
+    url(r'^selectable/', include('selectable.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
