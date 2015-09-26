@@ -1,6 +1,8 @@
 $icon-font-path: "../fonts/";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import "components-font-awesome/scss/font-awesome";
+@import "vendor/ghostbuttons";
+@import "widget/nav-pills";
 
 .navbar {
 	margin-bottom: 0;
@@ -179,7 +181,7 @@ $icon-font-path: "../fonts/";
 
 		&.active {
 			> a, a:hover {
-				background-color: $brand-info;
+				background-color: #337ab7;
 			}
 		}
 	}

@@ -58,7 +58,7 @@
                                 <div class="input-group cart-item-quantity js-hidden{% if line.form.quantity.errors %} has-error{% endif %}">
                                     {{ line.form.quantity }}
                                     <span class="input-group-btn">
-                                        <button class="btn btn-info" type="submit">{% trans "Update" %}</button>
+                                        <button class="btn btn-xs btn-black btn-outlined" type="submit">{% trans "Update" %}</button>
                                     </span>
                                 </div>
                                 {% if line.form.quantity.errors %}
@@ -69,7 +69,7 @@
                                 {% csrf_token %}
                             </form>
 
-                            <button type="submit" class="btn btn-link btn-sm cart-item-remove">
+                            <button type="submit" class="btn btn-sm btn-black btn-outlined cart-item-remove">
                                 <span class="text-muted">{% trans "Remove from cart" %}</span>
                             </button>
                         </div>
@@ -85,7 +85,7 @@
     </table>
     <div class="form-group">
         <div>
-            <a href="{% url "checkout:index" %}" class="btn btn-primary btn-lg pull-right">{% trans "Proceed to checkout" %}</a>
+            <a href="{% url "checkout:index" %}" class="btn btn-lg btn-black btn-outlined pull-right" data-wow-delay="0.7s">{% trans "Proceed to checkout" %}</a>
         </div>
     </div>
 {% else %}

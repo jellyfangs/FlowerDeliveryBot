@@ -4,7 +4,15 @@
 
 {% block title %}{% trans "Checkout" %} — {{ block.super }}{% endblock %}
 
-{% block outerbreadcrumb %}{% endblock %}
+{% block outerbreadcrumb %}
+<ul class="breadcrumb" itemprop="breadcrumb">
+    {% block breadcrumb %}
+    <li>
+        <a href="/">{% trans "Back to store" %}</a>
+    </li>
+    {% endblock breadcrumb %}
+</ul>
+{% endblock %}
 
 {% block header %}
 {% endblock %}
@@ -17,16 +25,20 @@
 {% endblock %}
 
 {% block content %}
-<ul class="nav nav-pills nav-justified">
+<ul class="nav nav-pills nav-justified nav-wizard">
     {% for stepitem in checkout %}
     <li class="{% if stepitem == step %}active{% endif %}">
+        {% if not forloop.first %}
+        <div class="nav-wedge"></div>
+        {% endif %}
         <a href="{{ stepitem.get_absolute_url }}">{% if stepitem %}<i class="fa fa-check-circle"></i> {% endif %}{{ stepitem.title }}</a>
+        {% if not forloop.last %}
+        <div class="nav-arrow"></div>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
-
-<hr>
-
+<br>
 {% block step_info %}{% endblock %}
 
 {% block forms %}{% endblock %}

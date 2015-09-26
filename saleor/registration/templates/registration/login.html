@@ -17,11 +17,9 @@
                         <input type="hidden" name="next" value="{{ next }}" />
                     </fieldset>
 
-                    <div class="form-group text-right">
-                        <a class="btn btn-secondary" href="{% url 'registration:request_email_confirmation' %}">{% trans "I don't know my password" %}</a>
-                        <button class="btn btn-primary">
-                            {% trans "Log in" %}
-                        </button>
+                    <div class="form-group text-left">
+                        <button class="btn btn-large btn-black btn-outlined">{% trans "Log in" %}</button>
+                        <a class="pull-right" href="{% url 'registration:request_email_confirmation' %}">{% trans "I don't know my password" %}</a>
                     </div>
                     <hr>
                     {% if facebook_login_url or google_login_url %}
@@ -39,7 +37,7 @@
                         <hr>
                     {% endif %}
                     <div class="form-group">
-                        <p>{% trans "Don't have an account yet?" %} <a class="btn btn-secondary" href="{% url 'registration:request_email_confirmation' %}">{% trans "Register" %}</a></p>
+                        <p>{% trans "Don't have an account yet?" %} <a class="btn btn-large btn-black btn-outlined" href="{% url 'registration:request_email_confirmation' %}">{% trans "Register" %}</a></p>
                     </div>
                 </form>
             </div>

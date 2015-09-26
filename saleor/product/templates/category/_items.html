@@ -4,7 +4,7 @@
 {% load discounted_price_range price_difference from discount %}
 
 {% for product in products %}
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" itemscope itemtype="https://schema.org/Product">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" itemscope itemtype="https://schema.org/Product">
         <div class="thumbnail">
             <a itemprop="url" href="{{ product.get_absolute_url }}">
                 {% if product.images.first %}
@@ -19,7 +19,8 @@
             {% if product.is_in_stock %}
                 {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
                     {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
-                        <p class="text-center"><a itemprop="url" href="{{ product.get_absolute_url }}" class="btn btn-primary" role="button">Starting at {% price_range price_range %}</a></p>
+                        <p class="text-center">
+                        <a itemprop="url" href="{{ product.get_absolute_url }}" class="btn btn-outlined btn-black btn-sm" data-wow-delay="0.7s" role="button">Starting at {% price_range price_range %}</a></p>
                         {% if undiscounted.min_price != price_range.min_price %}
                             <span class="label label-success">{% trans "Discount!" %}</span>
                         {% endif %}
