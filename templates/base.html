@@ -4,12 +4,12 @@
 
 <html lang="en" class="no-js">
     <head>
-        <title>{% block title %}Saleor{% endblock %}</title>
+        <title>{% block title %}PROJECT GALLANT{% endblock %}</title>
         {% block meta %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="{% block meta_description %}{% endblock %}">
-        <meta name="author" content="{% trans "Mirumee Software" %}">
+        <meta name="author" content="{% trans "PROJECT GALLANT" %}">
         {% endblock meta %}
 
         <script src="{% static "js/storefront_head.js" %}"></script>
@@ -25,7 +25,7 @@
 
     <body itemscope itemtype="http://schema.org/WebPage">
         {% block header %}
-            <header class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+            <header class="navbar navbar-default navbar navbar-static-top" role="navigation">
                 <nav class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -34,7 +34,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/">Saleor</a>
+                        <a class="navbar-brand" href="/">PROJECT GALLANT</a>
                     </div>
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav">
@@ -50,9 +50,10 @@
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Shopping cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
-                                    {% if request.cart %}
                                     <li class="divider"></li>
+                                    <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
+                                    <li class="divider"></li>
+                                    <ol>
                                     {% for item in request.cart %}
                                     <li>
                                         <a href="{% url 'product:details' slug=item.data.product_slug product_id=item.data.product_id %}">
@@ -60,9 +61,7 @@
                                         </a>
                                     </li>
                                     {% endfor %}
-                                    <li class="divider"></li>
-                                    <li><a href="{% url "checkout:index" %}">{% trans "Proceed to checkout" %}</a></li>
-                                    {% endif %}
+                                    </ol>
                                 </ul>
                             </li>
                             {% if user.is_authenticated %}
@@ -89,7 +88,9 @@
                 </nav>
             </header>
         {% endblock %}
+
         {% if messages %}
+        {% block msg_block %}
         <div class="container">
             {% for message in messages %}
             <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
@@ -98,17 +99,19 @@
             </div>
             {% endfor %}
         </div>
+        {% endblock %}
         {% endif %}
+
+        {% block jumbo %}
+        <div class="jumbotron">
+            <div class="container">
+                <h2>PROJECT GALLANT</h2>
+                <p >Affordable quality flowers. Sourced from California. Created in Sunnyvale. Hand delivered through Silicon Valley. By co-op couriers. With electric bikes and cars. Dispatched by robots. Orders via SMS. On demand.</p>
+            </div>
+        </div>
+        {% endblock %}
+
         <div class="container">
-            {% block outerbreadcrumb %}
-            <ul class="breadcrumb" itemprop="breadcrumb">
-                {% block breadcrumb %}
-                <li>
-                    <a href="/">{% trans "Home" %}</a>
-                </li>
-                {% endblock breadcrumb %}
-            </ul>
-            {% endblock outerbreadcrumb %}
             {% block outercontent %}
             <div class="row">
                 <div class="col-sm-12">
@@ -120,13 +123,21 @@
                 </div>
             </div>
             {% endblock outercontent %}
+            {% block outerbreadcrumb %}
+            <ul class="breadcrumb" itemprop="breadcrumb">
+                {% block breadcrumb %}
+                <li>
+                    <a href="/">{% trans "Home" %}</a>
+                </li>
+                {% endblock breadcrumb %}
+            </ul>
+            {% endblock outerbreadcrumb %}
         </div>
+
         {% block footer %}
             <footer>
                 <div class="container">
-                    <p class="pull-right">
-                        &copy; Mirumee Software 2015
-                    </p>
+                    <p class="text-center">Hello world</p>
                 </div>
             </footer>
         {% endblock %}

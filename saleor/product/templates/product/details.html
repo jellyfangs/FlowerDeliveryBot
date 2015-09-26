@@ -10,6 +10,24 @@
 
 {% block title %}{{ product }} — {{ block.super }}{% endblock %}
 
+{% block msg_block %}
+<br>
+<div class="container">
+    {% for message in messages %}
+    <a href="{% url 'cart:index' %}">
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ message }}
+    </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock msg_block %}
+
+{% block jumbo %}
+<br>
+{% endblock %}
+
 {% block breadcrumb %}
     {{ block.super }}
     {% with product.get_first_category as category %}
@@ -48,6 +66,12 @@
 
             <hr>
 
+            <div itemprop="description">
+                {{ product.description|markdown }}
+            </div>
+
+            <hr>
+
             <div class="visible-xs">
                 {% if product.images.first %}
                     <img class="img-responsive" src="{{ product.images.first.image.crop.680x680 }}" alt="">
@@ -74,12 +98,6 @@
             {% else %}
                 <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>
             {% endif %}
-
-            <hr>
-
-            <div itemprop="description">
-                {{ product.description|markdown }}
-            </div>
 
         </div>
 

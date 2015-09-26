@@ -1,15 +1,37 @@
 TODO
 
-MONDAY
-- save order due time
 - integrate django-helpdesk
-- create tickets on payment
-
-TUESDAY
 - integrate rapidsms
 - integrate pandorabots
-
-WEDNESDAY
 - courier app
 
 
+
+ARCHITECTURE
+
+#frontend (public)
+
+User facing
+- www
+- dashboard
+- login portal
+
+SMS apps
+- order api
+
+Native apps
+- tracking api
+- status api
+
+
+#backend (private)
+- Users
+- Orders
+- Dispatch
+- Mailer
+- Coverage
+
+#ops
+- heroku dyno
+- heroku postgresql
+- heroku mailer
