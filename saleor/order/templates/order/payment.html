@@ -19,7 +19,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             {% if order.user == user or not order.is_fully_paid %}
                 {% if not order.is_fully_paid %}
                     <div class="panel panel-info">
@@ -47,7 +47,7 @@
                                     {{ payment_form }}
                                     <div class="form-group text-right">
                                         {% block form_submit %}
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-black btn-outlined">
                                                 {% trans "Proceed to payment" %}
                                             </button>
                                         {% endblock %}

@@ -7,12 +7,11 @@
 {% block title %}{% trans "Your cart" %} — {{ block.super }}{% endblock %}
 
 {% block jumbo %}
-<br><br>
 {% endblock %}
 
 {% block breadcrumb %}
     {{ block.super }}
-<li><a href="{% url 'cart:index' %}">{% trans "Cart" %}</a></li>
+    <li><a href="{% url 'cart:index' %}">{% trans "Cart" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block content %}

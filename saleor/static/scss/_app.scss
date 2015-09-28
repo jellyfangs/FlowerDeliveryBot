@@ -4,10 +4,6 @@ $icon-font-path: "../fonts/";
 @import "vendor/ghostbuttons";
 @import "widget/nav-pills";
 
-.navbar {
-	margin-bottom: 0;
-}
-
 .price {
 	&.undiscounted {
 		text-decoration: line-through;
@@ -207,4 +203,12 @@ $icon-font-path: "../fonts/";
 
 .white_bg {
 	background-color: white;
+}
+
+.jumbotron {
+	margin-bottom: 0px;
+}
+
+.navbar {
+	margin-bottom: 40px;
 }

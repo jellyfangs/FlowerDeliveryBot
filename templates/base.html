@@ -24,6 +24,16 @@
     </head>
 
     <body itemscope itemtype="http://schema.org/WebPage">
+
+        {% block jumbo %}
+        <div class="jumbotron hero-unit">
+            <div class="container">
+                <h1><span class="white_bg">PROJECT GALLANT</span></h1>
+                <p><span class="white_bg">Affordable quality flowers. Sourced from California. Created in Sunnyvale. Hand delivered through Silicon Valley. By co-op couriers. With electric bikes and cars. Dispatched by robots. Orders via SMS. On demand.</span></p>
+            </div>
+        </div>
+        {% endblock %}
+
         {% block header %}
             <header class="navbar navbar-default navbar navbar-static-top" role="navigation">
                 <nav class="container">
@@ -34,21 +44,19 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/">PROJECT GALLANT</a>
+                        <a class="navbar-brand" href="/">Bouquets</a>
                     </div>
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav">
-                            {% for category in categories %}
+                            <!-- {% for category in categories %}
                                 <li>
                                     <a href="{{ category.get_absolute_url }}">
                                         {{ category }}
                                     </a>
                                 </li>
-                            {% endfor %}
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Shopping cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %} <b class="caret"></b></a>
+                            {% endfor %} -->
+                            <!-- <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li class="divider"></li>
                                     <li><a href="{% url "cart:index" %}">{% trans "View cart contents" %}</a></li>
@@ -63,7 +71,12 @@
                                     {% endfor %}
                                     </ol>
                                 </ul>
+                            </li> -->
+                            <li>
+                                <a href="{% url "cart:index" %}"><i class="fa fa-shopping-cart"></i> {% trans "Shopping cart" %} {% if request.cart %}<span class="badge">{{ request.cart.count }}</span>{% endif %}</a>
                             </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
                             {% if user.is_authenticated %}
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="."><i class="glyphicon glyphicon-user"></i> {{ user }} <b class="caret"></b></a>
@@ -102,38 +115,90 @@
         {% endblock %}
         {% endif %}
 
-        {% block jumbo %}
-        <div class="jumbotron hero-unit">
-            <div class="container">
-                <h2><span class="white_bg">PROJECT GALLANT</span></h2>
-                <p><span class="white_bg">Affordable quality flowers. Sourced from California. Created in Sunnyvale. Hand delivered through Silicon Valley. By co-op couriers. With electric bikes and cars. Dispatched by robots. Orders via SMS. On demand.</span></p>
-            </div>
-        </div>
-        {% endblock %}
-
         <div class="container">
             {% block outercontent %}
+            {% block content %}
             <div class="row">
-                <div class="col-sm-12">
-                    {% block content %}
-                        <div class="row">
-                            {% include "category/_items.html" %}
-                        </div>
-                    {% endblock content %}
+                <div class="col-lg-12 text-center">
+                    <h2>How it works</h2>
                 </div>
             </div>
+
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-info"></i>
+                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4>Choose Product</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-info"></i>
+                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4>Choose Delivery</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-info"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4>Send Flowers</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                </div>   
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Flower bouquets</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        {% include "category/_items.html" %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Delivery options</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div >
+                        <iframe width="100%" height="500px" frameborder="0" src="https://a.tiles.mapbox.com/v4/cowgirlbikecourier.ijmkkl8m/attribution,zoompan.html?access_token=pk.eyJ1IjoiY293Z2lybGJpa2Vjb3VyaWVyIiwiYSI6IjE2ZnNQUm8ifQ.0BhPMB9cmDBWJ7p9ecIe4Q"></iframe>
+                    </div>
+                </div>
+            </div>
+            {% endblock content %}
             {% endblock outercontent %}
+
             {% block outerbreadcrumb %}
             {% endblock outerbreadcrumb %}
         </div>
 
         {% block footer %}
             <footer>
-                <div class="container">
-                    <p class="text-center"></p>
+                <div class="footer">
+                   <div class="container narrow row-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <h2>Footer</h2>
+                            </div>
+                        </div>
+                   </div>
                 </div>
             </footer>
         {% endblock %}
+
         {% block footer_scripts %}
             <script src="{% static "js/storefront.js" %}"></script>
         {% endblock footer_scripts %}
