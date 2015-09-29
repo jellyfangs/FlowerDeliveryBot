@@ -67,7 +67,7 @@
 
     <div class="row">
         {% if order.user == user %}
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {% trans "Billing address" %}
@@ -78,14 +78,27 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 {% if order.is_shipping_required %}
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            {% trans "Shipping address" %}
+                            {% trans "Delivery address" %}
                         </div>
                         <div class="panel-body">
                             <address>{% include "userprofile/snippets/address-details.html" with address=order.shipping_address %}</address>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-sm-4">
+                {% if order.is_shipping_required %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {% trans "Delivery time" %}
+                        </div>
+                        <div class="panel-body">
+                            {{ order.due }}
                         </div>
                     </div>
                 {% endif %}
@@ -96,7 +109,7 @@
     {% for group in groups %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                {% blocktrans with number=forloop.counter %}Shipment #{{ number }}{% endblocktrans %}
+                {% blocktrans with number=forloop.counter %}Delivery #{{ number }}{% endblocktrans %}
             </div>
             <table class="table">
                 <thead>

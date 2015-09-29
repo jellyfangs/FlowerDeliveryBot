@@ -14,6 +14,7 @@
 
         <script src="{% static "js/storefront_head.js" %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static "css/storefront.css" %}">
+        <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
         {% block stylesheet %}{% endblock stylesheet %}
 
@@ -44,7 +45,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/">Bouquets</a>
+                        <a class="navbar-brand" href="/">Project Gallant</a>
                     </div>
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav">
@@ -120,40 +121,33 @@
             {% block content %}
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>How it works</h2>
+                    <h2>How It Works</h2>
                 </div>
             </div>
 
             <div class="row text-center">
                 <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-info"></i>
-                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                    </span>
+                    <img src="{% static "images/flower_icon1.png" %}">
                     <h4>Choose Product</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore.</p>
                 </div>
                 <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-info"></i>
-                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
-                    </span>
+                    <img src="{% static "images/flower_icon2.png" %}">
                     <h4>Choose Delivery</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore.</p>
                 </div>
                 <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-info"></i>
-                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
-                    </span>
-                    <h4>Send Flowers</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                    <img src="{% static "images/flower_icon3.png" %}">
+                    <h4>Get Kudos</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore.</p>
                 </div>   
             </div>
 
+            <div class="row"><div class="col-lg-12"><hr class="home"></div></div>
+
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>Flower bouquets</h2>
+                    <h2>Bouquets and Reasons</h2>
                 </div>
             </div>
 
@@ -165,9 +159,11 @@
                 </div>
             </div>
 
+            <div class="row"><div class="col-lg-12"><hr class="home"></div></div>
+
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>Delivery options</h2>
+                    <h2>Delivery Options</h2>
                 </div>
             </div>
 
@@ -178,6 +174,9 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row"><div class="col-lg-12"><hr class="home"></div></div>
+
             {% endblock content %}
             {% endblock outercontent %}
 
@@ -191,7 +190,7 @@
                    <div class="container narrow row-fluid">
                         <div class="row">
                             <div class="col-lg-12 text-center">
-                                <h2>Footer</h2>
+                                <h2></h2>
                             </div>
                         </div>
                    </div>
