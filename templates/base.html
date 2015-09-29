@@ -14,6 +14,8 @@
 
         <script src="{% static "js/storefront_head.js" %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static "css/storefront.css" %}">
+        <link href='https://fonts.googleapis.com/css?family=Alex+Brush' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
         {% block stylesheet %}{% endblock stylesheet %}
@@ -29,14 +31,16 @@
         {% block jumbo %}
         <div class="jumbotron hero-unit">
             <div class="container">
-                <h1><span class="white_bg">PROJECT GALLANT</span></h1>
-                <p><span class="white_bg">Affordable quality flowers. Sourced from California. Created in Sunnyvale. Hand delivered through Silicon Valley. By co-op couriers. With electric bikes and cars. Dispatched by robots. Orders via SMS. On demand.</span></p>
+                <div class="hero-bg text-center">
+                    <h1>Gallant</h1>
+                    <p class="text-uppercase">Affordable quality flowers. Sourced from California. Created in Sunnyvale. Hand delivered through Silicon Valley. By co-op couriers. With electric bikes and cars. Dispatched by robots. Orders via SMS. On demand.</p>
+                </div>
             </div>
         </div>
         {% endblock %}
 
         {% block header %}
-            <header class="navbar navbar-default navbar navbar-static-top" role="navigation">
+            <header class="navbar navbar-inverse navbar navbar-static-top" role="navigation">
                 <nav class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -122,6 +126,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2>How It Works</h2>
+                    <br><br>
                 </div>
             </div>
 
@@ -148,6 +153,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2>Bouquets and Reasons</h2>
+                    <br><br>
                 </div>
             </div>
 
@@ -164,6 +170,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2>Delivery Options</h2>
+                    <br><br>
                 </div>
             </div>
 
@@ -189,8 +196,25 @@
                 <div class="footer">
                    <div class="container narrow row-fluid">
                         <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <h2></h2>
+                            <div class="col-md-4">
+                                <img src="{% static "images/hero-logo.png" %}">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr><th>Flowers</th><th>Reasons</th><th>Delivering</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Roses</td><td>Friendship</td><td>San Jose</td></tr>
+                                        <tr><td>Carnations</td><td>Romance</td><td>Sunnyvale</td></tr>
+                                        <tr><td>Tulips</td><td>Congradulations</td><td>Mountain View</td></tr>
+                                        <tr><td>Daisies</td><td>Just Cause</td><td>Palo Alto</td></tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <p class="pull-left text-info">Designed in Silicon Valley</p>
+                                <p class="pull-right text-info">Copyright 2015, Project Gallant</p>
                             </div>
                         </div>
                    </div>
